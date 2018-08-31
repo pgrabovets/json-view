@@ -2,7 +2,7 @@
 This is a javascript library for displaying json data into a DOM.
 
 ### How to use
-include jsonview.css and jsonview.js 
+include jsonview.css and jsonview.js [link to demo](http://pgrabovets.github.io/json-view/)
 ```html
  <link rel="stylesheet" type="text/css" href="jsonview.css">
  <script src="jsonview.js"></script>
