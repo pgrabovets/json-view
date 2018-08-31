@@ -1,0 +1,68 @@
+body {
+	font-family: 'Open Sans';
+	font-size: 16px;
+	background-color: #fff;
+	color: #808080;
+	box-sizing: border-box;
+}
+
+.line {
+	margin: 4px 0;
+	display: flex;
+	justify-content: flex-start;
+}
+
+.caret-icon {
+	width: 18px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.empty-icon {
+	width: 18px;
+}
+
+.json-type {
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.json-key {
+	color: #444;
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.json-index {
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.json-separator {
+
+}
+
+.json-value {
+	margin-left: 8px;
+}
+
+.json-number {
+	color: #f9ae58;
+}
+
+.json-boolean {
+	color: #ec5f66;
+}
+
+.json-string {
+	color: #86b25c;
+}
+
+.json-size {
+	margin-right: 4px;
+	margin-left: 4px;
+}
+
+.hide {
+	display: none;
+}
