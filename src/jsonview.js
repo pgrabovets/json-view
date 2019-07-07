@@ -321,7 +321,8 @@ window.jsonView = {
    * @param {String} targetElem
    */
   format: function(jsonData, targetElem) {
-    const parsedData = JSON.parse(jsonData);
+    let parsedData = jsonData;
+    if (typeof jsonData === 'string' || jsonData instanceof String) parsedData = JSON.parse(jsonData);
     const tree = createTree(parsedData);
     render(tree, targetElem);
   }
