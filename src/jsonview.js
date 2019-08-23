@@ -1,5 +1,11 @@
 (function() {
 'use strict';
+
+function isString(s) {
+  return (typeof s === 'string' || s instanceof String);
+}
+
+
 /**
  * Create html element
  * @param {String} type html element 
@@ -36,7 +42,7 @@ function  createElement(type, config) {
  * @param {Object} node
  * @return {HTMLElement}
  */
-function createExpandedElement(node) {
+function createExpandedElement(node, options) {
   const iElem = createElement('i');
 
   if (node.expanded) {
@@ -54,9 +60,9 @@ function createExpandedElement(node) {
   caretElem.addEventListener('click', handleClick);
 
   const indexElem = createElement('div', {
-    className: 'json-index',
-    content: node.key,
+    className: 'json-index'
   });
+  indexElem.innerHTML = node.key;
 
   const typeElem = createElement('div', {
     className: 'json-type',
@@ -64,9 +70,10 @@ function createExpandedElement(node) {
   });
 
   const keyElem = createElement('div', {
-    className: 'json-key',
-    content: node.key,
+    className: 'json-key'
   });
+  keyElem.innerHTML = node.key;
+
 
   const sizeElem = createElement('div', {
     className: 'json-size'
@@ -78,11 +85,15 @@ function createExpandedElement(node) {
     sizeElem.innerText = '{' + node.children.length + '}';
   }
 
+  if (options.hideSizeElem===true) sizeElem.innerText = '';
+
   let lineChildren;
   if (node.key === null) {
     lineChildren = [caretElem, typeElem, sizeElem]
   } else if (node.parent.type === 'array') {
     lineChildren = [caretElem, indexElem, sizeElem]
+  } else if (node.key === '__HIDDEN__' && options.useHiddenKeys===true) {
+    lineChildren = [caretElem, sizeElem]
   } else {
     lineChildren = [caretElem, keyElem, sizeElem]
   }
@@ -93,7 +104,7 @@ function createExpandedElement(node) {
   });
 
   if (node.depth > 0) {
-    lineElem.style = 'margin-left: ' + node.depth * 24 + 'px;';
+    lineElem.style = 'margin-left: ' + node.depth * 20 + 'px;';
   }
 
   return lineElem;
@@ -104,15 +115,15 @@ function createExpandedElement(node) {
  * @param {Object} node
  * @return {HTMLElement}
  */
-function createNotExpandedElement(node) {
+function createNotExpandedElement(node, options) {
   const caretElem = createElement('div', {
     className: 'empty-icon',
   });
 
   const keyElem = createElement('div', {
-    className: 'json-key',
-    content: node.key
+    className: 'json-key'
   });
+  keyElem.innerHTML = node.key;
 
   const separatorElement = createElement('div', {
     className: 'json-separator',
@@ -122,17 +133,21 @@ function createNotExpandedElement(node) {
   const valueType = ' json-' + typeof node.value;
   const valueContent = String(node.value);
   const valueElement = createElement('div', {
-    className: 'json-value' + valueType,
-    content: valueContent
+    className: 'json-value' + valueType
   });
+  valueElement.innerHTML = valueContent;
+
+  let children = [caretElem];
+  if (node.key !== '__HIDDEN__' && options.useHiddenKeys===true) children.push(keyElem, separatorElement);
+  children.push(valueElement);
 
   const lineElem = createElement('div', {
     className: 'line',
-    children: [caretElem, keyElem, separatorElement, valueElement]
+    children
   });
 
   if (node.depth > 0) {
-    lineElem.style = 'margin-left: ' + node.depth * 24 + 'px;';
+    lineElem.style = 'margin-left: ' + node.depth * 20 + 'px;';
   }
 
   return lineElem;
@@ -143,12 +158,12 @@ function createNotExpandedElement(node) {
  * create tree node
  * @return {Object}
  */
-function createNode() {
+function createNode(options) {
   return {
     key: null,
     parent: null,
     value: null,
-    expanded: false,
+    expanded: options.startExpanded,
     type: null,
     children: null,
     elem: null,
@@ -235,23 +250,28 @@ function getType(val) {
  * @param {Object} obj parsed json object
  * @param {Object} parent of object tree
  */
-function traverseObject(obj, parent) {
+function traverseObject(obj, parent, options) {
   for (let key in obj) {
-    const child = createNode();
+    const child = createNode(options);
     child.parent = parent;
     child.key = key;
     child.type = getType(obj[key]);
     child.depth = parent.depth + 1;
-    child.expanded = false;
+
+    if (obj[key].__TITLE__ && options.useTitles===true) {
+      child.key = obj[key].__TITLE__;
+      delete obj[key].__TITLE__;
+    } 
 
     if (typeof obj[key] === 'object') {
       child.children = [];
       parent.children.push(child);
-      traverseObject(obj[key], child);
-      child.elem = createExpandedElement(child);
+      traverseObject(obj[key], child, options);
+      child.elem = createExpandedElement(child, options);
+
     } else {
       child.value = obj[key];
-      child.elem = createNotExpandedElement(child);
+      child.elem = createNotExpandedElement(child, options);
       parent.children.push(child);
     }
   }
@@ -263,14 +283,18 @@ function traverseObject(obj, parent) {
  * @param {Object} obj Json object
  * @return {Object}
  */
-function createTree(obj) {
-  const tree = createNode();
+function createTree(obj, options) {
+  const tree = createNode(options);
   tree.type = getType(obj);
   tree.children = [];
   tree.expanded = true;
 
-  traverseObject(obj, tree);
-  tree.elem = createExpandedElement(tree);
+  traverseObject(obj, tree, options);
+  tree.elem = createExpandedElement(tree, options);
+
+  if (options.hideRoot && tree.children.length===1) {
+    Object.assign(tree, tree.children[0]);
+  }
 
   return tree;
 }
@@ -281,11 +305,11 @@ function createTree(obj) {
  * @param {Object} node
  * @param {Callback} callback
  */
-function traverseTree(node, callback) {
-  callback(node);
+function traverseTree(node, callback, options) {
+  callback(node, options);
   if (node.children !== null) {
     node.children.forEach((item) => {
-      traverseTree(item, callback);
+      traverseTree(item, callback, options);
     });
   }
 }
@@ -296,7 +320,7 @@ function traverseTree(node, callback) {
  * @param {Object} tree
  * @param {String} targetElem
  */
-function render(tree, targetElem) {
+function render(tree, targetElem, options) {
   let rootElem;
   if (targetElem) {
     rootElem = document.querySelector(targetElem);
@@ -309,7 +333,7 @@ function render(tree, targetElem) {
       node.hideChildren();
     }
     rootElem.appendChild(node.elem);
-  });
+  }, options);
 }
 
 
@@ -320,11 +344,19 @@ window.jsonView = {
    * @param {String} jsonData
    * @param {String} targetElem
    */
-  format: function(jsonData, targetElem) {
+  format: function(jsonData, targetElem, options) {
     let parsedData = jsonData;
-    if (typeof jsonData === 'string' || jsonData instanceof String) parsedData = JSON.parse(jsonData);
-    const tree = createTree(parsedData);
-    render(tree, targetElem);
+    if (isString(jsonData)) parsedData = JSON.parse(jsonData);
+
+    if (!options) options={};
+    options.startExpanded = !!options.startExpanded; // if true starts with the json expanded
+    options.hideRoot = !!options.hideRoot; // if true hides the json root 
+    options.hideSizeElem = !!options.hideSizeElem; // if true hides sizeElem
+    options.useTitles = !!options.useTitles; // if true and object has a key '__TITLE__' use that instead of node.key
+    options.useHiddenKeys = !!options.useHiddenKeys; // if true hides object keys that equal '__HIDDEN__' (show only the value)
+
+    const tree = createTree(parsedData, options);
+    render(tree, targetElem, options);
   }
 }
 
