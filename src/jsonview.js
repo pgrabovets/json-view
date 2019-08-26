@@ -26,6 +26,10 @@ function  createElement(type, config) {
     htmlElement.textContent = config.content;
   }
 
+  if (config.HTMLcontent) {
+    htmlElement.innerHTML = config.HTMLcontent;
+  }
+
   if (config.children) {
     config.children.forEach((el) => {
       if (el !== null) {
@@ -59,21 +63,18 @@ function createExpandedElement(node, options) {
   const handleClick = node.toggle.bind(node);
   caretElem.addEventListener('click', handleClick);
 
-  const indexElem = createElement('div', {
-    className: 'json-index'
-  });
-  indexElem.innerHTML = node.key;
+  let config = { className: 'json-index' };
+  config[options.useHTML ? 'HTMLcontent' : 'content'] = node.key;
+  const indexElem = createElement('div', config);
 
   const typeElem = createElement('div', {
     className: 'json-type',
     content: node.type,
   });
 
-  const keyElem = createElement('div', {
-    className: 'json-key'
-  });
-  keyElem.innerHTML = node.key;
-
+  config = { className: 'json-key' };
+  config[options.useHTML ? 'HTMLcontent' : 'content'] = node.key;
+  const keyElem = createElement('div', config);
 
   const sizeElem = createElement('div', {
     className: 'json-size'
@@ -120,10 +121,10 @@ function createNotExpandedElement(node, options) {
     className: 'empty-icon',
   });
 
-  const keyElem = createElement('div', {
-    className: 'json-key'
-  });
-  keyElem.innerHTML = node.key;
+
+  let config = { className: 'json-key' };
+  config[options.useHTML ? 'HTMLcontent' : 'content'] = node.key;
+  const keyElem = createElement('div',config);
 
   const separatorElement = createElement('div', {
     className: 'json-separator',
@@ -131,11 +132,9 @@ function createNotExpandedElement(node, options) {
   });
 
   const valueType = ' json-' + typeof node.value;
-  const valueContent = String(node.value);
-  const valueElement = createElement('div', {
-    className: 'json-value' + valueType
-  });
-  valueElement.innerHTML = valueContent;
+  config = { className: 'json-value' + valueType };
+  config[options.useHTML ? 'HTMLcontent' : 'content'] = String(node.value);
+  const valueElement = createElement('div', config);
 
   let children = [caretElem];
   if (node.key !== '__HIDDEN__' && options.useHiddenKeys===true) children.push(keyElem, separatorElement);
@@ -354,6 +353,7 @@ window.jsonView = {
     options.hideSizeElem = !!options.hideSizeElem; // if true hides sizeElem
     options.useTitles = !!options.useTitles; // if true and object has a key '__TITLE__' use that instead of node.key
     options.useHiddenKeys = !!options.useHiddenKeys; // if true hides object keys that equal '__HIDDEN__' (show only the value)
+    options.useHTML = !!options.useHTML; // if true assume json data isd HTML
 
     const tree = createTree(parsedData, options);
     render(tree, targetElem, options);
