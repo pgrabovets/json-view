@@ -105,7 +105,7 @@ function createExpandedElement(node, options) {
   });
 
   if (node.depth > 0) {
-    lineElem.style = 'margin-left: ' + node.depth * 20 + 'px;';
+    lineElem.style = 'margin-left: ' + node.depth * 24 + 'px;';
   }
 
   return lineElem;
@@ -146,7 +146,7 @@ function createNotExpandedElement(node, options) {
   });
 
   if (node.depth > 0) {
-    lineElem.style = 'margin-left: ' + node.depth * 20 + 'px;';
+    lineElem.style = 'margin-left: ' + node.depth * 24 + 'px;';
   }
 
   return lineElem;
