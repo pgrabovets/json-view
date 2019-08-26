@@ -353,7 +353,7 @@ window.jsonView = {
     options.hideSizeElem = !!options.hideSizeElem; // if true hides sizeElem
     options.useTitles = !!options.useTitles; // if true and object has a key '__TITLE__' use that instead of node.key
     options.useHiddenKeys = !!options.useHiddenKeys; // if true hides object keys that equal '__HIDDEN__' (show only the value)
-    options.useHTML = !!options.useHTML; // if true assume json data isd HTML
+    options.useHTML = !!options.useHTML; // if true assume json data is HTML
 
     const tree = createTree(parsedData, options);
     render(tree, targetElem, options);
