@@ -5,7 +5,6 @@ This is a javascript library for displaying json data into a DOM. [link to demo]
 include jsonview.css and jsonview.js
 ```html
  <link rel="stylesheet" type="text/css" href="jsonview.css">
- <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
  <script src="jsonview.js"></script>
 ```
 call the function with arguments
@@ -24,7 +23,6 @@ jsonView.format(data, target);
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="jsonview.css">
   <script src="jsonview.js"></script>
 </head>
