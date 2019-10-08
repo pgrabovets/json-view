@@ -66,3 +66,20 @@ body {
 .hide {
 	display: none;
 }
+
+.fas {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	border-style: solid;
+}
+
+.fa-caret-down {
+	border-width: 6px 5px 0 5px;
+	border-color: #808080 transparent
+}
+
+.fa-caret-right {
+	border-width: 5px 0 5px 6px;
+	border-color: transparent transparent transparent #808080;
+}
