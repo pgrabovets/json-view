@@ -74,12 +74,12 @@ body {
 	border-style: solid;
 }
 
-.fa-caret-right {
+.fa-caret-down {
 	border-width: 6px 5px 0 5px;
 	border-color: #808080 transparent
 }
 
-.fa-caret-down {
+.fa-caret-right {
 	border-width: 5px 0 5px 6px;
 	border-color: transparent transparent transparent #808080;
 }
