@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>JSON VIEW</title>
+	<link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="jsonview.css">
+</head>
+<body>
+  <div class="root"></div>
+
+  <script type="text/javascript" src="jsonview.js"></script>
+  <script type="text/javascript">
+    fetch('example2.json')
+    .then((res)=> {
+      return res.text();
+    })
+    .then((data) => {
+      // create tree from json data
+      const tree = JsonView.createTree(data);
+
+      // render tree into dom element
+      JsonView.render(tree, document.querySelector('.root'));
+
+      JsonView.expandChildren(tree);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
+  </script>
+</body>
+</html>
