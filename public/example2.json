@@ -1,0 +1,19 @@
+{
+  "givenName": "Vas",
+  "surName": "Sudanagunta",
+  "children": [
+    {
+      "givenName": "Natalia", 
+      "age": 5
+    },
+    {
+      "givenName": "Aida",
+      "age": 17
+    }
+  ],
+  "address": {
+    "state": "NY",
+    "city": "Brooklyn",
+    "street": "718 Marcus Garvey Ave"
+  }
+}
