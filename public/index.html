@@ -15,12 +15,8 @@
       return res.text();
     })
     .then((data) => {
-      // create tree from json data
       const tree = JsonView.createTree(data);
-
-      // render tree into dom element
       JsonView.render(tree, document.querySelector('.root'));
-
       JsonView.expandChildren(tree);
     })
     .catch((err) => {
