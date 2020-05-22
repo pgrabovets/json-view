@@ -7,15 +7,33 @@ include jsonview.css and jsonview.js
  <link rel="stylesheet" type="text/css" href="jsonview.css">
  <script src="jsonview.js"></script>
 ```
-call the function with arguments
+get json data and render tree into DOM
 ```javascript
-//get json data
-var data = '{"name": "json-view","version": "1.0.0"}';
+// get json data
+const data = '{"name": "json-view","version": "1.0.0"}';
 
-//get target html element
-var target = '.root';
+// create json tree object
+const tree = JsonView.createTree(data);
 
-jsonView.format(data, target);
+// render tree into dom element
+JsonView.render(tree, document.querySelector('.tree'));
+
+// or you can render json data without creating tree
+const tree = JsonView.renderJSON(data, document.querySelector('.tree'));
+
+```
+control methods
+```javascript
+// expand tree
+JsonView.expandChildren(tree);
+
+// collapse tree
+JsonView.collapseChildren(tree);
+
+// treverse tree object
+JsonView.traverseTree(tree, function(node) {
+  console.log(node);
+});
 ```
 
 ### Example
@@ -23,19 +41,23 @@ jsonView.format(data, target);
 <!DOCTYPE html>
 <html>
 <head>
+  <title>JSON VIEW</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="jsonview.css">
-  <script src="jsonview.js"></script>
 </head>
 <body>
   <div class="root"></div>
 
+  <script type="text/javascript" src="jsonview.js"></script>
   <script type="text/javascript">
-    fetch('example.json')
+    fetch('example2.json')
     .then((res)=> {
       return res.text();
     })
     .then((data) => {
-      jsonView.format(data, '.root');
+      const tree = JsonView.createTree(data);
+      JsonView.render(tree, document.querySelector('.root'));
+      JsonView.expandChildren(tree);
     })
     .catch((err) => {
       console.log(err);
@@ -43,11 +65,14 @@ jsonView.format(data, target);
   </script>
 </body>
 </html>
+
 ```
 
-### For development install dependencies
+### For development install dependencies and run scripts
 ```
 $ npm install
+$ npm run dev
+$ npm run watch
 $ npm start
 open http://localhost:3000/
 ```
