@@ -47,7 +47,9 @@ function showNodeChildren(node) {
 function setCaretIconDown(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.fas');
-    icon && icon.classList.replace('fa-caret-right', 'fa-caret-down');
+    if (icon) {
+      icon.classList.replace('fa-caret-right', 'fa-caret-down');
+    }
   }
 }
 
@@ -55,7 +57,9 @@ function setCaretIconDown(node) {
 function setCaretIconRight(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.fas');
-    icon && icon.classList.replace('fa-caret-down', 'fa-caret-right');
+    if (icon) {
+      icon.classList.replace('fa-caret-down', 'fa-caret-right');
+    }
   }
 }
 
