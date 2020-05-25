@@ -169,13 +169,12 @@ function createNode(opt = {}) {
   return {
     key: opt.key || null,
     parent: opt.parent || null,
-    value: opt.value || null,
+    value: opt.hasOwnProperty('value') ? opt.value : null,
     isExpanded: opt.isExpanded || false,
     type: opt.type || null,
     children: opt.children || [],
     el: opt.el || null,
     depth: opt.depth || 0,
-    name: opt.name || null,
   }
 }
 
