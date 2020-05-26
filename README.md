@@ -4,8 +4,8 @@ This is a javascript library for displaying json data into a DOM. [link to demo]
 ### How to use
 include jsonview.css and jsonview.js
 ```html
- <link rel="stylesheet" type="text/css" href="jsonview.css">
- <script src="jsonview.js"></script>
+ <link rel="stylesheet" type="text/css" href="jsonview.bundle.css">
+ <script src="jsonview.bundle.js"></script>
 ```
 get json data and render tree into DOM
 ```javascript
@@ -43,12 +43,12 @@ JsonView.traverseTree(tree, function(node) {
 <head>
   <title>JSON VIEW</title>
   <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="jsonview.css">
+  <link rel="stylesheet" type="text/css" href="jsonview.bundle.css">
 </head>
 <body>
   <div class="root"></div>
 
-  <script type="text/javascript" src="jsonview.js"></script>
+  <script type="text/javascript" src="jsonview.bundle.js"></script>
   <script type="text/javascript">
     fetch('example2.json')
     .then((res)=> {

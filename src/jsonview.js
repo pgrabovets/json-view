@@ -1,3 +1,5 @@
+import './jsonview.scss';
+
 function expandedTemplate(params = {}) {
   const { key, size } = params;
   return `
