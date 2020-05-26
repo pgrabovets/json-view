@@ -21,7 +21,7 @@ var JsonView = (function (exports) {
     var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var key = params.key,
         size = params.size;
-    return "\n    <div class=\"line\">\n      <div class=\"caret-icon\">\n        <i class=\"fas fa-caret-right\"></i>\n      </div>\n      <div class=\"json-key\">".concat(key, "</div>\n      <div class=\"json-size\">").concat(size, "</div>\n    </div>\n  ");
+    return "\n    <div class=\"line\">\n      <div class=\"caret-icon\"><i class=\"fas fa-caret-right\"></i></div>\n      <div class=\"json-key\">".concat(key, "</div>\n      <div class=\"json-size\">").concat(size, "</div>\n    </div>\n  ");
   }
 
   function notExpandedTemplate() {

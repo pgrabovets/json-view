@@ -2,9 +2,7 @@ function expandedTemplate(params = {}) {
   const { key, size } = params;
   return `
     <div class="line">
-      <div class="caret-icon">
-        <i class="fas fa-caret-right"></i>
-      </div>
+      <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
       <div class="json-key">${key}</div>
       <div class="json-size">${size}</div>
     </div>
