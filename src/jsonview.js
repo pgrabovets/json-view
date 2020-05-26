@@ -22,6 +22,7 @@ function notExpandedTemplate(params = {}) {
   `
 }
 
+
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
     child.el.classList.add('hide');
@@ -72,6 +73,13 @@ function toggleNode(node) {
     setCaretIconDown(node);
     showNodeChildren(node);
   }
+}
+
+
+function createContainerElement() {
+  const el = document.createElement('div');
+  el.className = 'json-container';
+  return el;
 }
 
 
@@ -241,10 +249,14 @@ function renderJSON(jsonData, targetElement) {
  * @param {htmlElement} targetElement
  */
 function render(tree, targetElement) {
+  const containerEl = createContainerElement();
+
   traverseTree(tree, function(node) {
     node.el = createNodeElement(node);
-    targetElement.appendChild(node.el);
+    containerEl.appendChild(node.el);
   });
+
+  targetElement.appendChild(containerEl);
 }
 
 

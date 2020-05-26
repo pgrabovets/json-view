@@ -84,6 +84,12 @@ var JsonView = (function (exports) {
     }
   }
 
+  function createContainerElement() {
+    var el = document.createElement('div');
+    el.className = 'json-container';
+    return el;
+  }
+
   function createNodeElement(node) {
     var el = document.createElement('div');
 
@@ -188,10 +194,12 @@ var JsonView = (function (exports) {
   }
 
   function render(tree, targetElement) {
+    var containerEl = createContainerElement();
     traverseTree(tree, function (node) {
       node.el = createNodeElement(node);
-      targetElement.appendChild(node.el);
+      containerEl.appendChild(node.el);
     });
+    targetElement.appendChild(containerEl);
   }
 
   function expandChildren(node) {
