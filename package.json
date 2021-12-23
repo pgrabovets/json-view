@@ -5,7 +5,7 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "build": "rollup -c",
+    "build": "webpack",
     "watch": "rollup -c -w"
   },
   "author": "pavel grabovets",
@@ -18,7 +18,8 @@
     "rollup": "^2.10.2",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-scss": "^2.5.0",
-    "rollup-plugin-terser": "^5.3.0"
-  },
-  "dependencies": {}
+    "rollup-plugin-terser": "^5.3.0",
+    "webpack": "^5.65.0",
+    "webpack-cli": "^4.9.1"
+  }
 }

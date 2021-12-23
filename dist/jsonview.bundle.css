@@ -40,8 +40,7 @@
   .json-container .fas {
     display: inline-block;
     width: 0;
-    height: 0;
-    border-style: solid; }
+    height: 0; }
   .json-container .fa-caret-down {
     border-width: 6px 5px 0 5px;
     border-color: #808080 transparent; }
