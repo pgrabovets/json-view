@@ -4,9 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "serve": "webpack serve",
     "build": "webpack",
-    "watch": "rollup -c -w"
+    "watch": "webpack --watch"
   },
   "author": "pavel grabovets",
   "license": "ISC",
@@ -20,6 +20,7 @@
     "rollup-plugin-scss": "^2.5.0",
     "rollup-plugin-terser": "^5.3.0",
     "webpack": "^5.65.0",
-    "webpack-cli": "^4.9.1"
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.7.1"
   }
 }

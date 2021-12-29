@@ -1,6 +1,7 @@
 
 const log = function() {
-    console.log('hello json-view!');
+    console.log('Hello json-view!');
 }
+
 
 export { log };

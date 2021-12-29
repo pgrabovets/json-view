@@ -11,4 +11,8 @@ module.exports = {
     },
     path: path.resolve(__dirname, 'dist'),
   },
+  devServer: {
+    static: path.join(__dirname, 'demo'),
+    port: 3000,
+  }
 };
