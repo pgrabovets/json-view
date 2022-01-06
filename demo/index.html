@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>jsonview demo</title>
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
 </head>
 <body>
   <div class="root"></div>
@@ -9,7 +10,18 @@
   <script src="./src/index.js"></script>
   <script type="text/javascript" src="jsonview.js"></script>
   <script type="text/javascript">
-    jsonview.log();
+    fetch('example2.json')
+    .then((res)=> {
+      return res.text();
+    })
+    .then((data) => {
+      const tree = jsonview.createTree(data);
+      jsonview.render(tree, document.querySelector('.root'));
+      jsonview.expandChildren(tree);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
   </script>
 </body>
 </html>

@@ -71,8 +71,9 @@ JsonView.traverseTree(tree, function(node) {
 ### For development install dependencies and run scripts
 ```
 $ npm install
-$ npm run dev
-$ npm run watch
-$ npm start
+
+$ npm run serv
+$ npm run build
+
 open http://localhost:3000/
 ```
