@@ -1,8 +1,14 @@
 import './jsonview.scss';
 
-const config = {
-    //
-};
+import getDataType from './utils/getDataType';
+
+const classes = {
+    HIDDEN: 'hidden',
+    CARET_ICON: 'caret-icon',
+    CARET_RIGHT: 'fa-caret-right',
+    CARET_DOWN: 'fa-caret-down',
+    ICON: 'fas'
+}
 
 function expandedTemplate(params = {}) {
   const { key, size } = params;
@@ -14,7 +20,6 @@ function expandedTemplate(params = {}) {
     </div>
   `
 }
-
 
 function notExpandedTemplate(params = {}) {
   const { key, value, type } = params;
@@ -28,46 +33,47 @@ function notExpandedTemplate(params = {}) {
   `
 }
 
+function createContainerElement() {
+  const el = document.createElement('div');
+  el.className = 'json-container';
+  return el;
+}
 
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.add('hide');
+    child.el.classList.add(classes.HIDDEN);
     if (child.isExpanded) {
       hideNodeChildren(child);
     }
   });
 }
 
-
 function showNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.remove('hide');
+    child.el.classList.remove(classes.HIDDEN);
     if (child.isExpanded) {
       showNodeChildren(child);
     }
   });
 }
 
-
 function setCaretIconDown(node) {
   if (node.children.length > 0) {
-    const icon = node.el.querySelector('.fas');
+    const icon = node.el.querySelector('.' + classes.ICON);
     if (icon) {
-      icon.classList.replace('fa-caret-right', 'fa-caret-down');
+      icon.classList.replace(classes.CARET_RIGHT, classes.CARET_DOWN);
     }
   }
 }
-
 
 function setCaretIconRight(node) {
   if (node.children.length > 0) {
-    const icon = node.el.querySelector('.fas');
+    const icon = node.el.querySelector('.' + classes.ICON);
     if (icon) {
-      icon.classList.replace('fa-caret-down', 'fa-caret-right');
+      icon.classList.replace(classes.CARET_DOWN, classes.CARET_RIGHT);
     }
   }
 }
-
 
 function toggleNode(node) {
   if (node.isExpanded) {
@@ -80,14 +86,6 @@ function toggleNode(node) {
     showNodeChildren(node);
   }
 }
-
-
-function createContainerElement() {
-  const el = document.createElement('div');
-  el.className = 'json-container';
-  return el;
-}
-
 
 /**
  * Create node html element
@@ -110,7 +108,7 @@ function createNodeElement(node) {
       size: getSizeString(node),
     })
 
-    const caretEl = el.querySelector('.caret-icon');
+    const caretEl = el.querySelector('.' + classes.CARET_ICON);
     caretEl.addEventListener('click', () => {
       toggleNode(node);
     });
@@ -125,41 +123,13 @@ function createNodeElement(node) {
   const lineEl = el.children[0];
 
   if (node.parent !== null) {
-    lineEl.classList.add('hide');
+    lineEl.classList.add(classes.HIDDEN);
   }
 
   lineEl.style = 'margin-left: ' + node.depth * 18 + 'px;';
 
   return lineEl;
 }
-
-
-/**
- * Get value data type
- * @param {*} data
- */
-function getDataType(val) {
-  let type = typeof val;
-  if (Array.isArray(val)) type = 'array';
-  if (val === null) type = 'null';
-  return type;
-}
-
-
-/**
- * Recursively traverse json object
- * @param {object} target
- * @param {function} callback
- */
-function traverseObject(target, callback) {
-  callback(target);
-  if (typeof target === 'object') {
-    for (let key in target) {
-      traverseObject(target[key], callback);
-    }
-  }
-}
-
 
 /**
  * Recursively traverse Tree object
@@ -174,7 +144,6 @@ function traverseTree(node, callback) {
     });
   }
 }
-
 
 /**
  * Create node object
@@ -193,7 +162,6 @@ function createNode(opt = {}) {
     depth: opt.depth || 0,
   }
 }
-
 
 /**
  * Create subnode for node
@@ -216,6 +184,9 @@ function createSubnode(data, node) {
   }
 }
 
+function getJsonObject(data) {
+  return typeof data === 'string' ? JSON.parse(data) : data;
+}
 
 /**
  * Create tree
@@ -223,17 +194,15 @@ function createSubnode(data, node) {
  * @return {object}
  */
 function createTree(jsonData) {
-  const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
-
+  const parsedData = getJsonObject(jsonData);
   const rootNode = createNode({
-    value: data,
-    key: getDataType(data),
-    type: getDataType(data),
+    value: parsedData,
+    key: getDataType(parsedData),
+    type: getDataType(parsedData),
   });
-  createSubnode(data, rootNode);
+  createSubnode(parsedData, rootNode);
   return rootNode;
 }
-
 
 /**
  * Render JSON string into DOM container
@@ -242,12 +211,11 @@ function createTree(jsonData) {
  * @return {object} tree
  */
 function renderJSON(jsonData, targetElement) {
-  const parsedData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+  const parsedData = getJsonObject(jsonData);
   const tree = createTree(parsedData);
   render(tree, targetElement);
   return tree;
 }
-
 
 /**
  * Render tree into DOM container
@@ -265,10 +233,9 @@ function render(tree, targetElement) {
   targetElement.appendChild(containerEl);
 }
 
-
 function expandChildren(node) {
   traverseTree(node, function(child) {
-    child.el.classList.remove('hide');
+    child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
   });
@@ -277,11 +244,10 @@ function expandChildren(node) {
 function collapseChildren(node) {
   traverseTree(node, function(child) {
     child.isExpanded = false;
-    if (child.depth > node.depth) child.el.classList.add('hide');
+    if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
     setCaretIconRight(child);
   });
 }
-
 
 /**
  * Export public interface
