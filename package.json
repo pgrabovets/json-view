@@ -1,14 +1,21 @@
 {
   "name": "json-view",
-  "version": "2.0.0",
+  "version": "2.7.0",
   "description": "",
   "main": "dist/jsonview.js",
   "scripts": {
     "serve": "webpack serve",
     "build": "webpack"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pgrabovets/json-view.git"
+  },
+  "keywords": [
+    "json"
+  ],
   "author": "pavel grabovets",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "css-loader": "^6.5.1",
     "sass": "^1.45.2",

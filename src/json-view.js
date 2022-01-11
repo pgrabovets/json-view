@@ -1,6 +1,7 @@
 import './jsonview.scss';
 
 import getDataType from './utils/getDataType';
+import { listen, detach, element } from './utils/dom';
 
 const classes = {
     HIDDEN: 'hidden',
@@ -34,7 +35,7 @@ function notExpandedTemplate(params = {}) {
 }
 
 function createContainerElement() {
-  const el = document.createElement('div');
+  const el = element('div');
   el.className = 'json-container';
   return el;
 }
@@ -93,7 +94,7 @@ function toggleNode(node) {
  * @return html element
  */
 function createNodeElement(node) {
-  let el = document.createElement('div');
+  let el = element('div');
 
   const getSizeString = (node) => {
     const len = node.children.length;
@@ -107,11 +108,8 @@ function createNodeElement(node) {
       key: node.key,
       size: getSizeString(node),
     })
-
     const caretEl = el.querySelector('.' + classes.CARET_ICON);
-    caretEl.addEventListener('click', () => {
-      toggleNode(node);
-    });
+    node.dispose = listen(caretEl, 'click', () => toggleNode(node));
   } else {
     el.innerHTML = notExpandedTemplate({
       key: node.key,
@@ -136,11 +134,11 @@ function createNodeElement(node) {
  * @param {Object} node
  * @param {Callback} callback
  */
-function traverseTree(node, callback) {
+function traverse(node, callback) {
   callback(node);
   if (node.children.length > 0) {
     node.children.forEach((child) => {
-      traverseTree(child, callback);
+      traverse(child, callback);
     });
   }
 }
@@ -160,6 +158,7 @@ function createNode(opt = {}) {
     children: opt.children || [],
     el: opt.el || null,
     depth: opt.depth || 0,
+    dispose: null
   }
 }
 
@@ -193,7 +192,7 @@ function getJsonObject(data) {
  * @param {object | string} jsonData 
  * @return {object}
  */
-function createTree(jsonData) {
+export function create(jsonData) {
   const parsedData = getJsonObject(jsonData);
   const rootNode = createNode({
     value: parsedData,
@@ -210,7 +209,7 @@ function createTree(jsonData) {
  * @param {htmlElement} targetElement
  * @return {object} tree
  */
-function renderJSON(jsonData, targetElement) {
+export function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
   const tree = createTree(parsedData);
   render(tree, targetElement);
@@ -222,10 +221,10 @@ function renderJSON(jsonData, targetElement) {
  * @param {object} tree
  * @param {htmlElement} targetElement
  */
-function render(tree, targetElement) {
+export function render(tree, targetElement) {
   const containerEl = createContainerElement();
 
-  traverseTree(tree, function(node) {
+  traverse(tree, function(node) {
     node.el = createNodeElement(node);
     containerEl.appendChild(node.el);
   });
@@ -233,30 +232,40 @@ function render(tree, targetElement) {
   targetElement.appendChild(containerEl);
 }
 
-function expandChildren(node) {
-  traverseTree(node, function(child) {
+export function expand(node) {
+  traverse(node, function(child) {
     child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
   });
 }
 
-function collapseChildren(node) {
-  traverseTree(node, function(child) {
+export function collapse(node) {
+  traverse(node, function(child) {
     child.isExpanded = false;
     if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
     setCaretIconRight(child);
   });
 }
 
+export function destroy(tree) {
+  traverse(tree, (node) => {
+    if (node.dispose) {
+      node.dispose(); 
+    }
+  })
+  detach(tree.el.parentNode);
+}
+
 /**
  * Export public interface
  */
-export {
+export default {
   render,
-  createTree,
+  create,
   renderJSON,
-  expandChildren,
-  collapseChildren,
-  traverseTree,
+  expand,
+  collapse,
+  traverse,
+  destroy
 }
