@@ -1,5 +1,16 @@
 import './jsonview.scss';
 
+import getDataType from './utils/getDataType';
+import { listen, detach, element } from './utils/dom';
+
+const classes = {
+    HIDDEN: 'hidden',
+    CARET_ICON: 'caret-icon',
+    CARET_RIGHT: 'fa-caret-right',
+    CARET_DOWN: 'fa-caret-down',
+    ICON: 'fas'
+}
+
 function expandedTemplate(params = {}) {
   const { key, size } = params;
   return `
@@ -10,7 +21,6 @@ function expandedTemplate(params = {}) {
     </div>
   `
 }
-
 
 function notExpandedTemplate(params = {}) {
   const { key, value, type } = params;
@@ -24,46 +34,47 @@ function notExpandedTemplate(params = {}) {
   `
 }
 
+function createContainerElement() {
+  const el = element('div');
+  el.className = 'json-container';
+  return el;
+}
 
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.add('hide');
+    child.el.classList.add(classes.HIDDEN);
     if (child.isExpanded) {
       hideNodeChildren(child);
     }
   });
 }
 
-
 function showNodeChildren(node) {
   node.children.forEach((child) => {
-    child.el.classList.remove('hide');
+    child.el.classList.remove(classes.HIDDEN);
     if (child.isExpanded) {
       showNodeChildren(child);
     }
   });
 }
 
-
 function setCaretIconDown(node) {
   if (node.children.length > 0) {
-    const icon = node.el.querySelector('.fas');
+    const icon = node.el.querySelector('.' + classes.ICON);
     if (icon) {
-      icon.classList.replace('fa-caret-right', 'fa-caret-down');
+      icon.classList.replace(classes.CARET_RIGHT, classes.CARET_DOWN);
     }
   }
 }
-
 
 function setCaretIconRight(node) {
   if (node.children.length > 0) {
-    const icon = node.el.querySelector('.fas');
+    const icon = node.el.querySelector('.' + classes.ICON);
     if (icon) {
-      icon.classList.replace('fa-caret-down', 'fa-caret-right');
+      icon.classList.replace(classes.CARET_DOWN, classes.CARET_RIGHT);
     }
   }
 }
-
 
 function toggleNode(node) {
   if (node.isExpanded) {
@@ -77,21 +88,13 @@ function toggleNode(node) {
   }
 }
 
-
-function createContainerElement() {
-  const el = document.createElement('div');
-  el.className = 'json-container';
-  return el;
-}
-
-
 /**
  * Create node html element
  * @param {object} node 
  * @return html element
  */
 function createNodeElement(node) {
-  let el = document.createElement('div');
+  let el = element('div');
 
   const getSizeString = (node) => {
     const len = node.children.length;
@@ -105,11 +108,8 @@ function createNodeElement(node) {
       key: node.key,
       size: getSizeString(node),
     })
-
-    const caretEl = el.querySelector('.caret-icon');
-    caretEl.addEventListener('click', () => {
-      toggleNode(node);
-    });
+    const caretEl = el.querySelector('.' + classes.CARET_ICON);
+    node.dispose = listen(caretEl, 'click', () => toggleNode(node));
   } else {
     el.innerHTML = notExpandedTemplate({
       key: node.key,
@@ -121,7 +121,7 @@ function createNodeElement(node) {
   const lineEl = el.children[0];
 
   if (node.parent !== null) {
-    lineEl.classList.add('hide');
+    lineEl.classList.add(classes.HIDDEN);
   }
 
   lineEl.style = 'margin-left: ' + node.depth * 18 + 'px;';
@@ -129,48 +129,19 @@ function createNodeElement(node) {
   return lineEl;
 }
 
-
-/**
- * Get value data type
- * @param {*} data
- */
-function getDataType(val) {
-  let type = typeof val;
-  if (Array.isArray(val)) type = 'array';
-  if (val === null) type = 'null';
-  return type;
-}
-
-
-/**
- * Recursively traverse json object
- * @param {object} target
- * @param {function} callback
- */
-function traverseObject(target, callback) {
-  callback(target);
-  if (typeof target === 'object') {
-    for (let key in target) {
-      traverseObject(target[key], callback);
-    }
-  }
-}
-
-
 /**
  * Recursively traverse Tree object
  * @param {Object} node
  * @param {Callback} callback
  */
-function traverseTree(node, callback) {
+function traverse(node, callback) {
   callback(node);
   if (node.children.length > 0) {
     node.children.forEach((child) => {
-      traverseTree(child, callback);
+      traverse(child, callback);
     });
   }
 }
-
 
 /**
  * Create node object
@@ -187,9 +158,9 @@ function createNode(opt = {}) {
     children: opt.children || [],
     el: opt.el || null,
     depth: opt.depth || 0,
+    dispose: null
   }
 }
-
 
 /**
  * Create subnode for node
@@ -212,24 +183,25 @@ function createSubnode(data, node) {
   }
 }
 
+function getJsonObject(data) {
+  return typeof data === 'string' ? JSON.parse(data) : data;
+}
 
 /**
  * Create tree
  * @param {object | string} jsonData 
  * @return {object}
  */
-function createTree(jsonData) {
-  const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
-
+export function create(jsonData) {
+  const parsedData = getJsonObject(jsonData);
   const rootNode = createNode({
-    value: data,
-    key: getDataType(data),
-    type: getDataType(data),
+    value: parsedData,
+    key: getDataType(parsedData),
+    type: getDataType(parsedData),
   });
-  createSubnode(data, rootNode);
+  createSubnode(parsedData, rootNode);
   return rootNode;
 }
-
 
 /**
  * Render JSON string into DOM container
@@ -237,23 +209,22 @@ function createTree(jsonData) {
  * @param {htmlElement} targetElement
  * @return {object} tree
  */
-function renderJSON(jsonData, targetElement) {
-  const parsedData = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+export function renderJSON(jsonData, targetElement) {
+  const parsedData = getJsonObject(jsonData);
   const tree = createTree(parsedData);
   render(tree, targetElement);
   return tree;
 }
-
 
 /**
  * Render tree into DOM container
  * @param {object} tree
  * @param {htmlElement} targetElement
  */
-function render(tree, targetElement) {
+export function render(tree, targetElement) {
   const containerEl = createContainerElement();
 
-  traverseTree(tree, function(node) {
+  traverse(tree, function(node) {
     node.el = createNodeElement(node);
     containerEl.appendChild(node.el);
   });
@@ -261,32 +232,40 @@ function render(tree, targetElement) {
   targetElement.appendChild(containerEl);
 }
 
-
-function expandChildren(node) {
-  traverseTree(node, function(child) {
-    child.el.classList.remove('hide');
+export function expand(node) {
+  traverse(node, function(child) {
+    child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
   });
 }
 
-function collapseChildren(node) {
-  traverseTree(node, function(child) {
+export function collapse(node) {
+  traverse(node, function(child) {
     child.isExpanded = false;
-    if (child.depth > node.depth) child.el.classList.add('hide');
+    if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
     setCaretIconRight(child);
   });
 }
 
+export function destroy(tree) {
+  traverse(tree, (node) => {
+    if (node.dispose) {
+      node.dispose(); 
+    }
+  })
+  detach(tree.el.parentNode);
+}
 
 /**
  * Export public interface
  */
-export {
+export default {
   render,
-  createTree,
+  create,
   renderJSON,
-  expandChildren,
-  collapseChildren,
-  traverseTree,
+  expand,
+  collapse,
+  traverse,
+  destroy
 }

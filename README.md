@@ -1,63 +1,73 @@
 # json-view
 This is a javascript library for displaying json data into a DOM. [link to demo](http://pgrabovets.github.io/json-view/)
 
-### How to use
-include jsonview.css and jsonview.js
-```html
- <link rel="stylesheet" type="text/css" href="jsonview.bundle.css">
- <script src="jsonview.bundle.js"></script>
+### Installation
+```javascript
+  npm install '@pgrabovets/json-view';
 ```
+
+### How to use
+include jsonview.js from dist directory in your html page
+```html
+ <script src="jsonview.js"></script>
+```
+or you can use import
+```javascript
+  import jsonview from '@pgrabovets/json-view';
+```
+
 get json data and render tree into DOM
 ```javascript
 // get json data
 const data = '{"name": "json-view","version": "1.0.0"}';
 
 // create json tree object
-const tree = JsonView.createTree(data);
+const tree = jsonview.create(data);
 
 // render tree into dom element
-JsonView.render(tree, document.querySelector('.tree'));
+jsonview.render(tree, document.querySelector('.tree'));
 
-// or you can render json data without creating tree
-const tree = JsonView.renderJSON(data, document.querySelector('.tree'));
-
+// you can render json data without creating tree
+const tree = jsonview.renderJSON(data, document.querySelector('.tree'));
 ```
+
 control methods
 ```javascript
 // expand tree
-JsonView.expandChildren(tree);
+jsonview.expand(tree);
 
 // collapse tree
-JsonView.collapseChildren(tree);
+jsonview.collapse(tree);
 
-// treverse tree object
-JsonView.traverseTree(tree, function(node) {
+// traverse tree object
+jsonview.traverse(tree, function(node) {
   console.log(node);
 });
+
+// destory and unmount json tree from the dom
+jsonview.destroy(tree);
 ```
 
-### Example
+### Example1
 ```html
 <!DOCTYPE html>
 <html>
 <head>
   <title>JSON VIEW</title>
-  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="jsonview.bundle.css">
 </head>
 <body>
   <div class="root"></div>
 
-  <script type="text/javascript" src="jsonview.bundle.js"></script>
+  <script type="text/javascript" src="jsonview.js"></script>
   <script type="text/javascript">
     fetch('example2.json')
     .then((res)=> {
       return res.text();
     })
     .then((data) => {
-      const tree = JsonView.createTree(data);
-      JsonView.render(tree, document.querySelector('.root'));
-      JsonView.expandChildren(tree);
+      const tree = jsonview.create(data);
+      jsonview.render(tree, document.querySelector('.root'));
+      jsonview.expand(tree);
     })
     .catch((err) => {
       console.log(err);
@@ -68,11 +78,30 @@ JsonView.traverseTree(tree, function(node) {
 
 ```
 
+### Example2
+```javascript
+import jsonview from '@pgrabovets/json-view';
+
+fetch('example2.json')
+.then((res)=> {
+  return res.text();
+})
+.then((data) => {
+  const tree = jsonview.create(data);
+  jsonview.render(tree, document.querySelector('.root'));
+  jsonview.expand(tree);
+})
+.catch((err) => {
+  console.log(err);
+})
+```
+
 ### For development install dependencies and run scripts
 ```
 $ npm install
-$ npm run dev
-$ npm run watch
-$ npm start
+
+$ npm run serve
+$ npm run build
+
 open http://localhost:3000/
 ```

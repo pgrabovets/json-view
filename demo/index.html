@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>jsonview demo</title>
+</head>
+<body>
+  <div class="root"></div>
+
+  <script src="./src/index.js"></script>
+  <script type="text/javascript" src="jsonview.js"></script>
+  <script type="text/javascript">
+    fetch('example2.json')
+    .then((res)=> {
+      return res.text();
+    })
+    .then((data) => {
+      const tree = jsonview.create(data);
+      jsonview.render(tree, document.querySelector('.root'));
+      jsonview.expand(tree);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  </script>
+</body>
+</html>
