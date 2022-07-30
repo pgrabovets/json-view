@@ -261,6 +261,7 @@ export function destroy(tree) {
  * Export public interface
  */
 export default {
+  toggleNode,
   render,
   create,
   renderJSON,
