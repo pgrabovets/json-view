@@ -149,10 +149,14 @@ function traverse(node, callback) {
  * @return {object}
  */
 function createNode(opt = {}) {
+  let value = opt.hasOwnProperty('value') ? opt.value : null;
+  if (typeof value == 'object' && Object.keys(value).length == 0) {
+    value = "{}";
+  }
   return {
     key: opt.key || null,
     parent: opt.parent || null,
-    value: opt.hasOwnProperty('value') ? opt.value : null,
+    value: value,
     isExpanded: opt.isExpanded || false,
     type: opt.type || null,
     children: opt.children || [],
