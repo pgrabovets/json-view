@@ -134,7 +134,7 @@ function createNodeElement(node) {
  * @param {Object} node
  * @param {Callback} callback
  */
-function traverse(node, callback) {
+export function traverse(node, callback) {
   callback(node);
   if (node.children.length > 0) {
     node.children.forEach((child) => {
