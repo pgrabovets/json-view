@@ -15,5 +15,6 @@
     "state": "NY",
     "city": "Brooklyn",
     "street": "718 Marcus Garvey Ave"
-  }
+  },
+  "emptyObject": {}
 }

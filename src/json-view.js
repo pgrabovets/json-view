@@ -114,7 +114,7 @@ function createNodeElement(node) {
     el.innerHTML = notExpandedTemplate({
       key: node.key,
       value: node.value,
-      type: typeof node.value
+      type: node.value === '{}' ? 'object' : typeof node.value
     })
   }
 
@@ -149,10 +149,19 @@ export function traverse(node, callback) {
  * @return {object}
  */
 function createNode(opt = {}) {
+  const isEmptyObject = (value) => {
+    return (
+      getDataType(value) === 'object' &&
+      Object.keys(value).length === 0
+    )
+  }
+
   let value = opt.hasOwnProperty('value') ? opt.value : null;
-  if (typeof value == 'object' && Object.keys(value).length == 0) {
+
+  if (isEmptyObject(value)) {
     value = "{}";
   }
+
   return {
     key: opt.key || null,
     parent: opt.parent || null,
