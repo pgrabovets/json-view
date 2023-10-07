@@ -44,6 +44,9 @@ jsonview.traverse(tree, function(node) {
   console.log(node);
 });
 
+// function toggles between show or hide
+jsonview.toggleNode(tree);
+
 // destory and unmount json tree from the dom
 jsonview.destroy(tree);
 ```
