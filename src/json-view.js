@@ -224,7 +224,7 @@ export function create(jsonData) {
  */
 export function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
-  const tree = createTree(parsedData);
+  const tree = create(parsedData);
   render(tree, targetElement);
   return tree;
 }
