@@ -8,7 +8,6 @@
   <div class="root"></div>
   <hr>
   <div class="root-window"></div>
-
   <script type="module">
     import * as jsonview from '../src/json-view.js';
     Object.assign(window, jsonview);
@@ -18,36 +17,29 @@
     })
     .then((data) => {
       const tree = jsonview.createVirtualTree(data);
-      jsonview.render(tree, document.querySelector('.root'));
+      document.querySelector('.root').append(jsonview.render(tree));
       jsonview.expand(tree);
     })
     .catch((err) => {
       console.log(err);
     });
-
-
+    const parent = document.querySelector('.root-window');
     const treeObj = jsonview.createVirtualTree({
       numbers: [1, 2, 3],
       innerObject: {a: 1, b: 2}
     });
-    //const treeWindow = jsonview.createVirtualTree(window);
-    jsonview.render(treeObj, document.querySelector('.root-window'));
-    //jsonview.expand(tree);
-    // Example: number display
-    const treeNumber = jsonview.createVirtualTree(123);
-    jsonview.render(treeNumber, document.querySelector('.root-window'));
-    // Example: string display
-    const treeString = jsonview.createVirtualTree("some text");
-    jsonview.render(treeString, document.querySelector('.root-window'));
-    // Example: date display (todo fix display)
-    const treeDate = jsonview.createVirtualTree(new Date());
-    jsonview.render(treeDate, document.querySelector('.root-window'));
-    // Example: simple array display
-    const treeSimpleArray = jsonview.createVirtualTree([1, 2, 3]);
-    jsonview.render(treeSimpleArray, document.querySelector('.root-window'));
-    // Example: Float32Array display (todo fix display)
-    const treeFloat32Array = jsonview.createVirtualTree(new Float32Array([1, 2, 3]));
-    jsonview.render(treeFloat32Array, document.querySelector('.root-window'));
+    function example(desc, data) {
+      const tree = jsonview.createVirtualTree(data);
+      const e = jsonview.render(tree);
+      const hr = document.createElement('hr');
+      document.body.append(desc, e, hr);
+    }
+    // example('window display', window);
+    example('number display', 123);
+    example('string display', 'some text');
+    example('date display (todo fix display)', new Date());
+    example('simple array display', [1, 2, 3]);
+    example('Float32Array display (todo fix display)', new Float32Array([1, 2, 3]));
   </script>
 </body>
 </html>

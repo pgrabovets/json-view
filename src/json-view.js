@@ -205,15 +205,15 @@ function createVirtualTree(value) {
 /**
  * Render tree into DOM container
  * @param {object} tree
- * @param {HTMLElement} targetElement - The HTML element.
+ * @returns {HTMLElement} The HTML element.
  */
-function render(tree, targetElement) {
+function render(tree) {
   const containerEl = createContainerElement();
   traverse(tree, function(node) {
     node.el = createNodeElement(node);
     containerEl.appendChild(node.el);
   });
-  targetElement.appendChild(containerEl);
+  return containerEl;
 }
 function expand(node) {
   traverse(node, function(child) {
