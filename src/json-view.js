@@ -193,18 +193,16 @@ function getJsonObject(data) {
   return typeof data === 'string' ? JSON.parse(data) : data;
 }
 /**
- * Create tree
- * @param {object | string} jsonData 
- * @return {object}
+ * @param {object | string} data - The data.
+ * @return {VirtualNode} The virtual node.
  */
-function create(jsonData) {
-  const parsedData = getJsonObject(jsonData);
+function createVirtualTree(value) {
   const rootNode = createNode({
-    value: parsedData,
-    key: getDataType(parsedData),
-    type: getDataType(parsedData),
+    value,
+    key: getDataType(value),
+    type: getDataType(value),
   });
-  createSubnode(parsedData, rootNode);
+  createSubnode(value, rootNode);
   return rootNode;
 }
 /**
@@ -215,7 +213,7 @@ function create(jsonData) {
  */
 function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
-  const tree = create(parsedData);
+  const tree = createVirtualTree(parsedData);
   render(tree, targetElement);
   return tree;
 }
@@ -257,7 +255,7 @@ function destroy(tree) {
 export {
   toggleNode,
   render,
-  create,
+  createVirtualTree,
   renderJSON,
   expand,
   collapse,

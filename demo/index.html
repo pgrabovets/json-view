@@ -6,20 +6,42 @@
 </head>
 <body>
   <div class="root"></div>
+  <hr>
+  <div class="root-window"></div>
+
   <script type="module">
     import * as jsonview from '../src/json-view.js';
+    Object.assign(window, jsonview);
     fetch('example2.json')
     .then((res)=> {
-      return res.text();
+      return res.json();
     })
     .then((data) => {
-      const tree = jsonview.create(data);
+      const tree = jsonview.createVirtualTree(data);
       jsonview.render(tree, document.querySelector('.root'));
       jsonview.expand(tree);
     })
     .catch((err) => {
       console.log(err);
-    })
+    });
+
+
+    const treeObj = jsonview.createVirtualTree({
+      numbers: [1, 2, 3],
+      innerObject: {a: 1, b: 2}
+    });
+    //const treeWindow = jsonview.createVirtualTree(window);
+    jsonview.render(treeObj, document.querySelector('.root-window'));
+    //jsonview.expand(tree);
+    // Example: number display
+    const treeNumber = jsonview.createVirtualTree(123);
+    jsonview.render(treeNumber, document.querySelector('.root-window'));
+    // Example: string display
+    const treeString = jsonview.createVirtualTree("some text");
+    jsonview.render(treeString, document.querySelector('.root-window'));
+    // Example: date display (todo)
+    const treeDate = jsonview.createVirtualTree(new Date());
+    jsonview.render(treeDate, document.querySelector('.root-window'));
   </script>
 </body>
 </html>
