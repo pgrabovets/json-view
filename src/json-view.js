@@ -1,8 +1,5 @@
-//import './jsonview.scss';
-
-import getDataType from './utils/getDataType.js';
-import { listen, detach, element } from './utils/dom.js';
-
+import {getDataType} from './getDataType.js';
+import {listen} from './listen.js';
 const classes = {
     HIDDEN: 'hidden',
     CARET_ICON: 'caret-icon',
@@ -35,7 +32,7 @@ function notExpandedTemplate(params = {}) {
 }
 
 function createContainerElement() {
-  const el = element('div');
+  const el = document.createElement('div');
   el.className = 'json-container';
   return el;
 }
@@ -94,7 +91,7 @@ export function toggleNode(node) {
  * @return html element
  */
 function createNodeElement(node) {
-  let el = element('div');
+  let el = document.createElement('div');
 
   const getSizeString = (node) => {
     const len = node.children.length;
@@ -267,7 +264,7 @@ export function destroy(tree) {
       node.dispose(); 
     }
   })
-  detach(tree.el.parentNode);
+  tree.el.parentNode.remove();
 }
 
 /**
