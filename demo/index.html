@@ -2,12 +2,12 @@
 <html>
 <head>
 	<title>jsonview demo</title>
+  <link href="../src/jsonview.css" rel="stylesheet">
 </head>
 <body>
   <div class="root"></div>
-
-  <script type="text/javascript" src="jsonview.js"></script>
-  <script type="text/javascript">
+  <script type="module">
+    import * as jsonview from '../src/json-view.js';
     fetch('example2.json')
     .then((res)=> {
       return res.text();

@@ -1,7 +1,7 @@
-import './jsonview.scss';
+//import './jsonview.scss';
 
-import getDataType from './utils/getDataType';
-import { listen, detach, element } from './utils/dom';
+import getDataType from './utils/getDataType.js';
+import { listen, detach, element } from './utils/dom.js';
 
 const classes = {
     HIDDEN: 'hidden',
