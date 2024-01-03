@@ -7,7 +7,6 @@ const classes = {
     CARET_DOWN: 'fa-caret-down',
     ICON: 'fas'
 }
-
 function expandedTemplate(params = {}) {
   const { key, size } = params;
   return `
@@ -18,7 +17,6 @@ function expandedTemplate(params = {}) {
     </div>
   `
 }
-
 function notExpandedTemplate(params = {}) {
   const { key, value, type } = params;
   return `
@@ -30,13 +28,11 @@ function notExpandedTemplate(params = {}) {
     </div>
   `
 }
-
 function createContainerElement() {
   const el = document.createElement('div');
   el.className = 'json-container';
   return el;
 }
-
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
     child.el.classList.add(classes.HIDDEN);
@@ -45,7 +41,6 @@ function hideNodeChildren(node) {
     }
   });
 }
-
 function showNodeChildren(node) {
   node.children.forEach((child) => {
     child.el.classList.remove(classes.HIDDEN);
@@ -54,7 +49,6 @@ function showNodeChildren(node) {
     }
   });
 }
-
 function setCaretIconDown(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.' + classes.ICON);
@@ -63,7 +57,6 @@ function setCaretIconDown(node) {
     }
   }
 }
-
 function setCaretIconRight(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.' + classes.ICON);
@@ -72,8 +65,15 @@ function setCaretIconRight(node) {
     }
   }
 }
-
-export function toggleNode(node) {
+/**
+ * @typedef {object} VirtualNode
+ * @property {VirtualNode} children - The children.
+ * @property {boolean} isExpanded - Whether node is expanded.
+ */
+/**
+ * @param {VirtualNode} node 
+ */
+function toggleNode(node) {
   if (node.isExpanded) {
     node.isExpanded = false;
     setCaretIconRight(node);
@@ -84,7 +84,6 @@ export function toggleNode(node) {
     showNodeChildren(node);
   }
 }
-
 /**
  * Create node html element
  * @param {object} node 
@@ -92,14 +91,12 @@ export function toggleNode(node) {
  */
 function createNodeElement(node) {
   let el = document.createElement('div');
-
   const getSizeString = (node) => {
     const len = node.children.length;
     if (node.type === 'array') return `[${len}]`;
     if (node.type === 'object') return `{${len}}`;
     return null;
   }
-
   if (node.children.length > 0) {
     el.innerHTML = expandedTemplate({
       key: node.key,
@@ -114,24 +111,19 @@ function createNodeElement(node) {
       type: node.value === '{}' ? 'object' : typeof node.value
     })
   }
-
   const lineEl = el.children[0];
-
   if (node.parent !== null) {
     lineEl.classList.add(classes.HIDDEN);
   }
-
   lineEl.style = 'margin-left: ' + node.depth * 18 + 'px;';
-
   return lineEl;
 }
-
 /**
  * Recursively traverse Tree object
  * @param {Object} node
  * @param {Callback} callback
  */
-export function traverse(node, callback) {
+function traverse(node, callback) {
   callback(node);
   if (node.children.length > 0) {
     node.children.forEach((child) => {
@@ -139,7 +131,6 @@ export function traverse(node, callback) {
     });
   }
 }
-
 /**
  * Create node object
  * @param {object} opt options
@@ -152,13 +143,10 @@ function createNode(opt = {}) {
       Object.keys(value).length === 0
     )
   }
-
   let value = opt.hasOwnProperty('value') ? opt.value : null;
-
   if (isEmptyObject(value)) {
     value = "{}";
   }
-
   return {
     key: opt.key || null,
     parent: opt.parent || null,
@@ -171,7 +159,6 @@ function createNode(opt = {}) {
     dispose: null
   }
 }
-
 /**
  * Create subnode for node
  * @param {object} Json data
@@ -192,17 +179,15 @@ function createSubnode(data, node) {
     }
   }
 }
-
 function getJsonObject(data) {
   return typeof data === 'string' ? JSON.parse(data) : data;
 }
-
 /**
  * Create tree
  * @param {object | string} jsonData 
  * @return {object}
  */
-export function create(jsonData) {
+function create(jsonData) {
   const parsedData = getJsonObject(jsonData);
   const rootNode = createNode({
     value: parsedData,
@@ -212,53 +197,46 @@ export function create(jsonData) {
   createSubnode(parsedData, rootNode);
   return rootNode;
 }
-
 /**
  * Render JSON string into DOM container
  * @param {string | object} jsonData
  * @param {htmlElement} targetElement
  * @return {object} tree
  */
-export function renderJSON(jsonData, targetElement) {
+function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
   const tree = create(parsedData);
   render(tree, targetElement);
   return tree;
 }
-
 /**
  * Render tree into DOM container
  * @param {object} tree
  * @param {htmlElement} targetElement
  */
-export function render(tree, targetElement) {
+function render(tree, targetElement) {
   const containerEl = createContainerElement();
-
   traverse(tree, function(node) {
     node.el = createNodeElement(node);
     containerEl.appendChild(node.el);
   });
-
   targetElement.appendChild(containerEl);
 }
-
-export function expand(node) {
+function expand(node) {
   traverse(node, function(child) {
     child.el.classList.remove(classes.HIDDEN);
     child.isExpanded = true;
     setCaretIconDown(child);
   });
 }
-
-export function collapse(node) {
+function collapse(node) {
   traverse(node, function(child) {
     child.isExpanded = false;
     if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
     setCaretIconRight(child);
   });
 }
-
-export function destroy(tree) {
+function destroy(tree) {
   traverse(tree, (node) => {
     if (node.dispose) {
       node.dispose(); 
@@ -266,11 +244,7 @@ export function destroy(tree) {
   })
   tree.el.parentNode.remove();
 }
-
-/**
- * Export public interface
- */
-export default {
+export {
   toggleNode,
   render,
   create,
