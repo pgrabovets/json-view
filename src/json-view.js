@@ -7,18 +7,43 @@ const classes = {
     CARET_DOWN: 'fa-caret-down',
     ICON: 'fas'
 }
+/**
+ * @typedef {object} VirtualNode
+ * @property {VirtualNode[]} children - The children.
+ * @property {boolean} isExpanded - Whether node is expanded.
+ * @property {string} key - The key.
+ * @property {Function | null} dispose - The unlisten function.
+ * @property {number} depth - The depth.
+ * @property {VirtualNode | null} parent - The parent.
+ * @property {any} value - The value.
+ * @property {'array'|'object'} type - The type.
+ * @property {HTMLElement} el - The HTML element.
+ */
+/**
+ * @param {object} [params] - The input data.
+ * @param {string} [params.key] - The key.
+ * @param {number} [params.size] - The size.
+ * @returns {string} HTML string.
+ */
 function expandedTemplate(params = {}) {
-  const { key, size } = params;
+  const {key, size} = params;
   return `
     <div class="line">
       <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
       <div class="json-key">${key}</div>
       <div class="json-size">${size}</div>
     </div>
-  `
+  `;
 }
+/**
+ * @param {object} [params]
+ * @param {string} [params.key] - The key.
+ * @param {string} [params.value] - The value.
+ * @param {string} [params.type] - The type.
+ * @returns {string} HTML string.
+ */
 function notExpandedTemplate(params = {}) {
-  const { key, value, type } = params;
+  const {key, value, type} = params;
   return `
     <div class="line">
       <div class="empty-icon"></div>
@@ -26,13 +51,16 @@ function notExpandedTemplate(params = {}) {
       <div class="json-separator">:</div>
       <div class="json-value json-${type}">${value}</div>
     </div>
-  `
+  `;
 }
 function createContainerElement() {
   const el = document.createElement('div');
   el.className = 'json-container';
   return el;
 }
+/**
+ * @param {VirtualNode} node - The virtual node.
+ */
 function hideNodeChildren(node) {
   node.children.forEach((child) => {
     child.el.classList.add(classes.HIDDEN);
@@ -41,6 +69,9 @@ function hideNodeChildren(node) {
     }
   });
 }
+/**
+ * @param {VirtualNode} node - The virtual node.
+ */
 function showNodeChildren(node) {
   node.children.forEach((child) => {
     child.el.classList.remove(classes.HIDDEN);
@@ -49,6 +80,9 @@ function showNodeChildren(node) {
     }
   });
 }
+/**
+ * @param {VirtualNode} node - The virtual node.
+ */
 function setCaretIconDown(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.' + classes.ICON);
@@ -57,6 +91,9 @@ function setCaretIconDown(node) {
     }
   }
 }
+/**
+ * @param {VirtualNode} node - The virtual node.
+ */
 function setCaretIconRight(node) {
   if (node.children.length > 0) {
     const icon = node.el.querySelector('.' + classes.ICON);
@@ -65,18 +102,6 @@ function setCaretIconRight(node) {
     }
   }
 }
-/**
- * @typedef {object} VirtualNode
- * @property {VirtualNode[]} children - The children.
- * @property {boolean} isExpanded - Whether node is expanded.
- * @property {string} key - The key.
- * @property {Function} dispose - The unlisten function.
- * @property {number} depth - The depth.
- * @property {VirtualNode | null} parent - The parent.
- * @property {any} value - The value.
- * @property {'array'|'object'} type - The type.
- * @property {HTMLElement} el - The HTML element.
- */
 /**
  * @param {VirtualNode} node - The virtual node.
  */
@@ -142,9 +167,9 @@ function traverse(node, callback) {
   }
 }
 /**
- * Create virtual node object.
- * @param {object} opt options
- * @returns {VirtualNode}
+ * Create a virtual node object.
+ * @param {object} opt - The options.
+ * @returns {VirtualNode} - The virtual node.
  */
 function createNode(opt = {}) {
   const isEmptyObject = (value) => {
@@ -175,23 +200,24 @@ function createNode(opt = {}) {
  * @param {VirtualNode} node
  */
 function createSubnode(data, node) {
-  if (typeof data === 'object') {
-    for (const key in data) {
-      const child = createNode({
-        value: data[key],
-        key,
-        depth: node.depth + 1,
-        type: getDataType(data[key]),
-        parent: node,
-      });
-      node.children.push(child);
-      createSubnode(data[key], child);
-    }
+  if (typeof data !== 'object') {
+    return;
+  }
+  for (const key in data) {
+    const child = createNode({
+      value: data[key],
+      key,
+      depth: node.depth + 1,
+      type: getDataType(data[key]),
+      parent: node,
+    });
+    node.children.push(child);
+    createSubnode(data[key], child);
   }
 }
 /**
  * @param {object | string} data - The data.
- * @return {VirtualNode} The virtual node.
+ * @returns {VirtualNode} The virtual node.
  */
 function createVirtualTree(value) {
   const rootNode = createNode({
@@ -215,6 +241,9 @@ function render(tree) {
   });
   return containerEl;
 }
+/**
+ * @param {VirtualNode} node 
+ */
 function expand(node) {
   traverse(node, function(child) {
     child.el.classList.remove(classes.HIDDEN);
@@ -222,13 +251,21 @@ function expand(node) {
     setCaretIconDown(child);
   });
 }
+/**
+ * @param {VirtualNode} node 
+ */
 function collapse(node) {
   traverse(node, function(child) {
     child.isExpanded = false;
-    if (child.depth > node.depth) child.el.classList.add(classes.HIDDEN);
+    if (child.depth > node.depth) {
+      child.el.classList.add(classes.HIDDEN);
+    }
     setCaretIconRight(child);
   });
 }
+/**
+ * @param {VirtualNode} tree 
+ */
 function destroy(tree) {
   traverse(tree, (node) => {
     if (node.dispose) {
@@ -245,4 +282,4 @@ export {
   collapse,
   traverse,
   destroy
-}
+};
