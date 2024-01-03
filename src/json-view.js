@@ -189,9 +189,6 @@ function createSubnode(data, node) {
     }
   }
 }
-function getJsonObject(data) {
-  return typeof data === 'string' ? JSON.parse(data) : data;
-}
 /**
  * @param {object | string} data - The data.
  * @return {VirtualNode} The virtual node.
@@ -204,18 +201,6 @@ function createVirtualTree(value) {
   });
   createSubnode(value, rootNode);
   return rootNode;
-}
-/**
- * Render JSON string into DOM container
- * @param {string | object} jsonData
- * @param {HTMLElement} targetElement
- * @return {VirtualNode} Virtual tree hierarchy.
- */
-function renderJSON(jsonData, targetElement) {
-  const parsedData = getJsonObject(jsonData);
-  const tree = createVirtualTree(parsedData);
-  render(tree, targetElement);
-  return tree;
 }
 /**
  * Render tree into DOM container
@@ -256,7 +241,6 @@ export {
   toggleNode,
   render,
   createVirtualTree,
-  renderJSON,
   expand,
   collapse,
   traverse,

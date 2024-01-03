@@ -39,9 +39,15 @@
     // Example: string display
     const treeString = jsonview.createVirtualTree("some text");
     jsonview.render(treeString, document.querySelector('.root-window'));
-    // Example: date display (todo)
+    // Example: date display (todo fix display)
     const treeDate = jsonview.createVirtualTree(new Date());
     jsonview.render(treeDate, document.querySelector('.root-window'));
+    // Example: simple array display
+    const treeSimpleArray = jsonview.createVirtualTree([1, 2, 3]);
+    jsonview.render(treeSimpleArray, document.querySelector('.root-window'));
+    // Example: Float32Array display (todo fix display)
+    const treeFloat32Array = jsonview.createVirtualTree(new Float32Array([1, 2, 3]));
+    jsonview.render(treeFloat32Array, document.querySelector('.root-window'));
   </script>
 </body>
 </html>
