@@ -67,11 +67,18 @@ function setCaretIconRight(node) {
 }
 /**
  * @typedef {object} VirtualNode
- * @property {VirtualNode} children - The children.
+ * @property {VirtualNode[]} children - The children.
  * @property {boolean} isExpanded - Whether node is expanded.
+ * @property {string} key - The key.
+ * @property {Function} dispose - The unlisten function.
+ * @property {number} depth - The depth.
+ * @property {VirtualNode | null} parent - The parent.
+ * @property {any} value - The value.
+ * @property {'array'|'object'} type - The type.
+ * @property {HTMLElement} el - The HTML element.
  */
 /**
- * @param {VirtualNode} node 
+ * @param {VirtualNode} node - The virtual node.
  */
 function toggleNode(node) {
   if (node.isExpanded) {
@@ -85,9 +92,9 @@ function toggleNode(node) {
   }
 }
 /**
- * Create node html element
- * @param {object} node 
- * @return html element
+ * Create node html element.
+ * @param {VirtualNode} node - The virtual node.
+ * @returns {HTMLElement} - New HTMLElement.
  */
 function createNodeElement(node) {
   let el = document.createElement('div');
@@ -112,16 +119,19 @@ function createNodeElement(node) {
     })
   }
   const lineEl = el.children[0];
+  if (!(lineEl instanceof HTMLElement)) {
+    throw new Error('lineEl not an instance of HTMLElement');
+  }
   if (node.parent !== null) {
     lineEl.classList.add(classes.HIDDEN);
   }
-  lineEl.style = 'margin-left: ' + node.depth * 18 + 'px;';
+  lineEl.style.marginLeft = node.depth * 18 + 'px';
   return lineEl;
 }
 /**
- * Recursively traverse Tree object
- * @param {Object} node
- * @param {Callback} callback
+ * Recursively traverse Tree object.
+ * @param {VirtualNode} node - The virtual node.
+ * @param {Function} callback - The callback.
  */
 function traverse(node, callback) {
   callback(node);
@@ -132,9 +142,9 @@ function traverse(node, callback) {
   }
 }
 /**
- * Create node object
+ * Create virtual node object.
  * @param {object} opt options
- * @return {object}
+ * @returns {VirtualNode}
  */
 function createNode(opt = {}) {
   const isEmptyObject = (value) => {
@@ -161,15 +171,15 @@ function createNode(opt = {}) {
 }
 /**
  * Create subnode for node
- * @param {object} Json data
- * @param {object} node
+ * @param {object} data
+ * @param {VirtualNode} node
  */
 function createSubnode(data, node) {
   if (typeof data === 'object') {
-    for (let key in data) {
+    for (const key in data) {
       const child = createNode({
         value: data[key],
-        key: key,
+        key,
         depth: node.depth + 1,
         type: getDataType(data[key]),
         parent: node,
@@ -200,8 +210,8 @@ function create(jsonData) {
 /**
  * Render JSON string into DOM container
  * @param {string | object} jsonData
- * @param {htmlElement} targetElement
- * @return {object} tree
+ * @param {HTMLElement} targetElement
+ * @return {VirtualNode} Virtual tree hierarchy.
  */
 function renderJSON(jsonData, targetElement) {
   const parsedData = getJsonObject(jsonData);
@@ -212,7 +222,7 @@ function renderJSON(jsonData, targetElement) {
 /**
  * Render tree into DOM container
  * @param {object} tree
- * @param {htmlElement} targetElement
+ * @param {HTMLElement} targetElement - The HTML element.
  */
 function render(tree, targetElement) {
   const containerEl = createContainerElement();
