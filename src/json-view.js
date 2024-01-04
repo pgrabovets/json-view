@@ -36,17 +36,21 @@ function expandedTemplate(params = {}) {
   `;
 }
 /**
- * @param {object} [params]
- * @param {string} [params.key] - The key.
- * @param {string} [params.value] - The value.
- * @param {string} [params.type] - The type.
+ * @param {VirtualNode} node - The virtual node.
  * @returns {string} HTML string.
  */
-function notExpandedTemplate(params = {}) {
-  const {key, type} = params;
-  let {value} = params;
+function notExpandedTemplate(node) {
+  const {key, type} = node;
+  let {value} = node;
   if (type === 'string') {
     value = JSON.stringify(value);
+  }
+  if (!node.parent) {
+    return `
+      <div class="line">
+        <div class="json-${type}">${value}</div>
+      </div>
+    `;
   }
   return `
     <div class="line">
@@ -149,11 +153,7 @@ function createNodeElement(node) {
     const caretEl = el.querySelector('.' + classes.CARET_ICON);
     node.dispose = listen(caretEl, 'click', () => toggleNode(node));
   } else {
-    el.innerHTML = notExpandedTemplate({
-      key: node.key,
-      value: node.value,
-      type: node.value === '{}' ? 'object' : typeof node.value
-    })
+    el.innerHTML = notExpandedTemplate(node);
   }
   const lineEl = el.children[0];
   if (!(lineEl instanceof HTMLElement)) {

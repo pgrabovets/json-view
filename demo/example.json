@@ -1,20 +1,29 @@
 {
-  "givenName": "Vas",
-  "surName": "Sudanagunta",
-  "children": [
+  "username": "kungfooman",
+  "github": "https://github.com/kungfooman/",
+  "repos": [
     {
-      "givenName": "Natalia", 
-      "age": 5
+      "name": "RuntimeTypeInspector.js",
+      "url": "https://github.com/kungfooman/RuntimeTypeInspector.js"
     },
     {
-      "givenName": "Aida",
-      "age": 17
+      "name": "libcod",
+      "url": "https://github.com/kungfooman/libcod"
     }
   ],
-  "address": {
-    "state": "NY",
-    "city": "Brooklyn",
-    "street": "718 Marcus Garvey Ave"
+  "extras": {
+    "languages": [
+      "C",
+      "JavaScript",
+      "GanjaScript",
+      "Mathematica"
+    ],
+    "fields": [
+      "nodejs",
+      "win32 api",
+      "Linux",
+      "DevOps"
+    ]
   },
-  "emptyObject": {}
+  "testEmptyObject": {}
 }

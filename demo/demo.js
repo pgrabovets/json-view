@@ -7,7 +7,7 @@ async function main() {
   const elem = jsonview.render(tree);
   document.querySelector('.root').append(elem);
   jsonview.expand(tree);
-  Object.assign(window, {tree, elem});
+  Object.assign(window, {json, tree, elem});
 }
 main();
 const parent = document.querySelector('.root-window');
@@ -24,9 +24,9 @@ function example(desc, data) {
 example('window display', window);
 example('number display', 123);
 example('string display', 'some text');
-example('date display (todo fix display)', new Date());
+example('date display', new Date());
 example('simple array display', [1, 2, 3]);
-example('Float32Array display (todo fix display)', new Float32Array([1, 2, 3]));
+example('Float32Array display', new Float32Array([1, 2, 3]));
 function exampleParentData(parent, data) {
   const tree = jsonview.createVirtualTree(data);
   const e = jsonview.render(tree);
@@ -36,4 +36,5 @@ exampleParentData(document.querySelector('#td-a'), 123);
 exampleParentData(document.querySelector('#td-b'), true);
 exampleParentData(document.querySelector('#td-c'), "test str");
 exampleParentData(document.querySelector('#td-d'), {a: {b: {c: {d: 1234}}}});
-exampleParentData(document.querySelector('#td-e'), Object.create(null));
+exampleParentData(document.querySelector('#td-e'), {key: "string"});
+exampleParentData(document.querySelector('#td-f'), {string: "test"});
