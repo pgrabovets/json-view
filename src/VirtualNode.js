@@ -1,6 +1,7 @@
 import {createContainerElement} from "./createContainerElement.js";
-import {classes} from "./json-view.js";
+import {classes, createNode} from "./json-view.js";
 import {listen} from './listen.js';
+import {getDataType} from './getDataType.js';
 class VirtualNode {
   /** @type {VirtualNode[]} */
   children = [];
@@ -186,6 +187,32 @@ class VirtualNode {
         <div class="json-size">${size}</div>
       </div>
     `;
+  }
+  /**
+   * Create subnode for node.
+   * @param {any} data
+   * @param {number} [depth]
+   */
+  createSubnode(data, depth = 0) {
+    const node = this;
+    if (typeof data !== 'object') {
+      return;
+    }
+    if (depth > 1) {
+      return;
+    }
+    for (const key in data) {
+      const value = data[key];
+      const child = createNode({
+        value,
+        key,
+        depth: node.depth + 1,
+        type: getDataType(value),
+        parent: node,
+      });
+      node.children.push(child);
+      child.createSubnode(value, depth + 1);
+    }
   }
 }
 export {VirtualNode};

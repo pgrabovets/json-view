@@ -38,30 +38,6 @@ function createNode(opt = {}) {
   return node;
 }
 /**
- * Create subnode for node
- * @param {object} data
- * @param {VirtualNode} node
- */
-function createSubnode(data, node, depth = 0) {
-  if (typeof data !== 'object') {
-    return;
-  }
-  if (depth > 1) {
-    return;
-  }
-  for (const key in data) {
-    const child = createNode({
-      value: data[key],
-      key,
-      depth: node.depth + 1,
-      type: getDataType(data[key]),
-      parent: node,
-    });
-    node.children.push(child);
-    createSubnode(data[key], child, depth + 1);
-  }
-}
-/**
  * @param {object | string | number | boolean} value - The value.
  * @returns {VirtualNode} The virtual node.
  */
@@ -71,10 +47,11 @@ function createVirtualTree(value) {
     key: getDataType(value),
     type: getDataType(value),
   });
-  createSubnode(value, rootNode);
+  rootNode.createSubnode(value);
   return rootNode;
 }
 export {
+  classes,
   createVirtualTree,
-  classes
+  createNode
 };
