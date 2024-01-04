@@ -1,6 +1,6 @@
 /**
- * Get value data type
- * @param {*} val - The value.
+ * Get value data type as string.
+ * @param {string} val - The type of value as string.
  */
 function getDataType(val) {
   if (Array.isArray(val)) {

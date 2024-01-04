@@ -28,8 +28,6 @@ class VirtualNode {
   parent = null;
   /** @type {any} */
   value;
-  /** @type {'array'|'object'} */
-  type;
   /** @type {HTMLElement} */
   el;
   /**
@@ -37,29 +35,14 @@ class VirtualNode {
    * @param {object} [opt] - The options.
    * @param {any} [opt.value] - The value.
    * @param {string} [opt.key] - The key.
+   * @param {number} [opt.depth] - The depth.
+   * @param {VirtualNode} [opt.parent] - The parent.
    */
   constructor(opt = {}) {
-    const isEmptyObject = (value) => {
-      return (
-        getDataType(value) === 'object' &&
-        Object.keys(value).length === 0
-      )
-    }
-    let value = opt.hasOwnProperty('value') ? opt.value : null;
-    if (isEmptyObject(value)) {
-      value = "{}";
-    }
-    Object.assign(this, {
-      key: opt.key || null,
-      parent: opt.parent || null,
-      value: value,
-      //isExpanded: opt.isExpanded || false,
-      type: opt.type || null,
-      //children: opt.children || [],
-      //el: opt.el || null,
-      depth: opt.depth || 0,
-      //dispose: null
-    });
+    Object.assign(this, opt);
+  }
+  get type() {
+    return getDataType(this.value);
   }
   /**
    * Recursively traverse virtual node.
@@ -197,6 +180,7 @@ class VirtualNode {
       value = JSON.stringify(value);
     }
     if (!parent) {
+      console.log({key, type, parent});
       return `
         <div class="line">
           <div class="json-${type}">${value}</div>
@@ -231,7 +215,6 @@ class VirtualNode {
    * @param {number} [depth]
    */
   createSubnode(data, depth = 0) {
-    const node = this;
     if (typeof data !== 'object') {
       return;
     }
@@ -243,11 +226,10 @@ class VirtualNode {
       const child = new VirtualNode({
         value,
         key,
-        depth: node.depth + 1,
-        type: getDataType(value),
-        parent: node,
+        depth: this.depth + 1,
+        parent: this,
       });
-      node.children.push(child);
+      this.children.push(child);
       child.createSubnode(value, depth + 1);
     }
   }

@@ -38,3 +38,4 @@ exampleParentData(document.querySelector('#td-c'), "test str");
 exampleParentData(document.querySelector('#td-d'), {a: {b: {c: {d: 1234}}}});
 exampleParentData(document.querySelector('#td-e'), {key: "string"});
 exampleParentData(document.querySelector('#td-f'), {string: "test"});
+exampleParentData(document.querySelector('#td-g'), {});
