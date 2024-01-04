@@ -127,13 +127,18 @@ function toggleNode(node) {
  */
 function createNodeElement(node) {
   let el = document.createElement('div');
+  /**
+   * 
+   * @param {VirtualNode} node 
+   * @returns 
+   */
   const getSizeString = (node) => {
     const len = node.children.length;
     if (node.type === 'array') {
       return `[${len}]`;
     }
-    if (node.type === 'object') {
-      return `{${len}}`;
+    if (node.value instanceof Object && node.value !== null) {
+      return `{${Object.keys(node.value).length}}`;
     }
     return null;
   }

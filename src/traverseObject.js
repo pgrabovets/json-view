@@ -1,5 +1,5 @@
 /**
- * Recursively traverse json object
+ * Recursively traverse json object.
  * @param {object} target
  * @param {function} callback
  */
@@ -11,3 +11,4 @@ function traverseObject(target, callback) {
     }
   }
 }
+export {traverseObject};
