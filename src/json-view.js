@@ -43,7 +43,11 @@ function expandedTemplate(params = {}) {
  * @returns {string} HTML string.
  */
 function notExpandedTemplate(params = {}) {
-  const {key, value, type} = params;
+  const {key, type} = params;
+  let {value} = params;
+  if (type === 'string') {
+    value = JSON.stringify(value);
+  }
   return `
     <div class="line">
       <div class="empty-icon"></div>
@@ -125,8 +129,12 @@ function createNodeElement(node) {
   let el = document.createElement('div');
   const getSizeString = (node) => {
     const len = node.children.length;
-    if (node.type === 'array') return `[${len}]`;
-    if (node.type === 'object') return `{${len}}`;
+    if (node.type === 'array') {
+      return `[${len}]`;
+    }
+    if (node.type === 'object') {
+      return `{${len}}`;
+    }
     return null;
   }
   if (node.children.length > 0) {
