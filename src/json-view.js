@@ -1,4 +1,3 @@
-import {getDataType} from './getDataType.js';
 import {VirtualNode} from './VirtualNode.js';
 const classes = {
   HIDDEN: 'hidden',
@@ -12,8 +11,7 @@ const classes = {
  * @returns {VirtualNode} The virtual node.
  */
 function createVirtualTree(value) {
-  const key = getDataType(value);
-  const rootNode = new VirtualNode({value, key});
+  const rootNode = new VirtualNode({value});
   rootNode.createSubnode(value);
   return rootNode;
 }

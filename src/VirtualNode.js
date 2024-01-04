@@ -111,7 +111,7 @@ class VirtualNode {
     const node = this; // todo rewrite
     const el = document.createElement('div');
     if (node.children.length > 0) {
-      el.innerHTML = node.expandedTemplate();
+      el.innerHTML = node.expandTypeAndSize();
       const caretEl = el.querySelector('.' + classes.CARET_ICON);
       node.dispose = listen(caretEl, 'click', () => node.toggleNode());
     } else {
@@ -180,7 +180,6 @@ class VirtualNode {
       value = JSON.stringify(value);
     }
     if (!parent) {
-      console.log({key, type, parent});
       return `
         <div class="line">
           <div class="json-${type}">${value}</div>
@@ -199,8 +198,17 @@ class VirtualNode {
   /**
    * @returns {string} HTML string.
    */
-  expandedTemplate() {
-    const {key, size} = this;
+  expandTypeAndSize() {
+    const {key, type, size} = this;
+    if (key === null) {
+      return `
+        <div class="line">
+          <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
+          <div class="json-type">${type}</div>
+          <div class="json-size">${size}</div>
+        </div>
+      `;
+    }
     return `
       <div class="line">
         <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
