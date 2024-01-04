@@ -21,15 +21,15 @@ class VirtualNode {
    * The unlisten function.
    * @type {Function | null}
    */
-  dispose;
+  dispose = null;
   /** @type {number} */
   depth = 0;
   /** @type {VirtualNode | null} */
   parent = null;
   /** @type {any} */
   value;
-  /** @type {HTMLElement} */
-  el;
+  /** @type {HTMLElement | null} */
+  el = null;
   /**
    * Create a virtual node object.
    * @param {object} [opt] - The options.
@@ -68,7 +68,7 @@ class VirtualNode {
   }
   expand() {
     this.traverse(function(child) {
-      child.el.classList.remove(classes.HIDDEN);
+      child.el?.classList.remove(classes.HIDDEN);
       child.isExpanded = true;
       child.setCaretIconDown();
     });
@@ -77,7 +77,7 @@ class VirtualNode {
     this.traverse((child) => {
       child.isExpanded = false;
       if (child.depth > this.depth) {
-        child.el.classList.add(classes.HIDDEN);
+        child.el?.classList.add(classes.HIDDEN);
       }
       child.setCaretIconRight();
     });
@@ -88,7 +88,7 @@ class VirtualNode {
         node.dispose(); 
       }
     })
-    this.el.parentNode.remove();
+    this.el?.parentElement?.remove();
   }
   /**
    * @type {string | null}

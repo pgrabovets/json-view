@@ -7,7 +7,9 @@ async function main() {
   const elem = tree.render();
   document.querySelector('.root').append(elem);
   tree.expand();
-  Object.assign(window, {json, tree, elem});
+  const test = new jsonview.VirtualNode({value: "test"});
+  test.destroy();
+  Object.assign(window, {json, tree, elem, test});
 }
 main();
 const parent = document.querySelector('.root-window');
