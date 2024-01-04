@@ -35,13 +35,13 @@
   margin-left: 8px;
 }
 .json-container .json-number {
-  color: #f9ae58;
+  color: #132bff;
 }
 .json-container .json-boolean {
-  color: #ec5f66;
+  color: #5fb4ec;
 }
 .json-container .json-string {
-  color: #86b25c;
+  color: #fd5246;
 }
 .json-container .json-size {
   margin-right: 4px;
