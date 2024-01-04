@@ -1,5 +1,5 @@
 import {createContainerElement} from "./createContainerElement.js";
-import {expandedTemplate, notExpandedTemplate, classes} from "./json-view.js";
+import {expandedTemplate, classes} from "./json-view.js";
 import {listen} from './listen.js';
 class VirtualNode {
   /** @type {VirtualNode[]} */
@@ -97,7 +97,7 @@ class VirtualNode {
       const caretEl = el.querySelector('.' + classes.CARET_ICON);
       node.dispose = listen(caretEl, 'click', () => node.toggleNode());
     } else {
-      el.innerHTML = notExpandedTemplate(node);
+      el.innerHTML = node.notExpandedTemplate();
     }
     const lineEl = el.children[0];
     if (!(lineEl instanceof HTMLElement)) {
@@ -151,6 +151,31 @@ class VirtualNode {
         child.showNodeChildren();
       }
     });
+  }
+  /**
+   * @returns {string} HTML string.
+   */
+  notExpandedTemplate() {
+    const {key, type, parent} = this;
+    let {value} = this;
+    if (type === 'string') {
+      value = JSON.stringify(value);
+    }
+    if (!parent) {
+      return `
+        <div class="line">
+          <div class="json-${type}">${value}</div>
+        </div>
+      `;
+    }
+    return `
+      <div class="line">
+        <div class="empty-icon"></div>
+        <div class="json-key">${key}</div>
+        <div class="json-separator">:</div>
+        <div class="json-value json-${type}">${value}</div>
+      </div>
+    `;
   }
 }
 export {VirtualNode};

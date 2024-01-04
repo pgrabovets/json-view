@@ -24,32 +24,6 @@ function expandedTemplate(params = {}) {
   `;
 }
 /**
- * @param {VirtualNode} node - The virtual node.
- * @returns {string} HTML string.
- */
-function notExpandedTemplate(node) {
-  const {key, type} = node;
-  let {value} = node;
-  if (type === 'string') {
-    value = JSON.stringify(value);
-  }
-  if (!node.parent) {
-    return `
-      <div class="line">
-        <div class="json-${type}">${value}</div>
-      </div>
-    `;
-  }
-  return `
-    <div class="line">
-      <div class="empty-icon"></div>
-      <div class="json-key">${key}</div>
-      <div class="json-separator">:</div>
-      <div class="json-value json-${type}">${value}</div>
-    </div>
-  `;
-}
-/**
  * Create a virtual node object.
  * @param {object} opt - The options.
  * @returns {VirtualNode} - The virtual node.
@@ -119,6 +93,5 @@ function createVirtualTree(value) {
 export {
   createVirtualTree,
   expandedTemplate,
-  notExpandedTemplate,
   classes
 };
