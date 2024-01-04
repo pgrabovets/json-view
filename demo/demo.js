@@ -4,9 +4,9 @@ async function main() {
   const resp = await fetch('example.json');
   const json = await resp.json();
   const tree = jsonview.createVirtualTree(json);
-  const elem = jsonview.render(tree);
+  const elem = tree.render();
   document.querySelector('.root').append(elem);
-  jsonview.expand(tree);
+  tree.expand();
   Object.assign(window, {json, tree, elem});
 }
 main();
@@ -17,7 +17,7 @@ const treeObj = jsonview.createVirtualTree({
 });
 function example(desc, data) {
   const tree = jsonview.createVirtualTree(data);
-  const e = jsonview.render(tree);
+  const e = tree.render();
   const hr = document.createElement('hr');
   document.body.append(desc, e, hr);
 }
@@ -29,7 +29,7 @@ example('simple array display', [1, 2, 3]);
 example('Float32Array display', new Float32Array([1, 2, 3]));
 function exampleParentData(parent, data) {
   const tree = jsonview.createVirtualTree(data);
-  const e = jsonview.render(tree);
+  const e = tree.render();
   parent.append(e);
 }
 exampleParentData(document.querySelector('#td-a'), 123);

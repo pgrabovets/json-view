@@ -7,18 +7,76 @@ const classes = {
     CARET_DOWN: 'fa-caret-down',
     ICON: 'fas'
 }
-/**
- * @typedef {object} VirtualNode
- * @property {VirtualNode[]} children - The children.
- * @property {boolean} isExpanded - Whether node is expanded.
- * @property {string} key - The key.
- * @property {Function | null} dispose - The unlisten function.
- * @property {number} depth - The depth.
- * @property {VirtualNode | null} parent - The parent.
- * @property {any} value - The value.
- * @property {'array'|'object'} type - The type.
- * @property {HTMLElement} el - The HTML element.
- */
+class VirtualNode {
+  /** @type {VirtualNode[]} */
+  children = [];
+  /** @type {boolean} */
+  isExpanded;
+  /** @type {string} */
+  key;
+  /**
+   * The unlisten function.
+   * @type {Function | null}
+   */
+  dispose;
+  /** @type {number} */
+  depth;
+  /** @type {VirtualNode | null} */
+  parent;
+  /** @type {any} */
+  value;
+  /** @type {'array'|'object'} */
+  type;
+  /** @type {HTMLElement} */
+  el;
+  /**
+   * Recursively traverse Tree object.
+   * @param {VirtualNode} node - The virtual node.
+   * @param {(node: VirtualNode) => void} callback - The callback.
+   */
+  traverse(callback) {
+    callback(this);
+    this.children.forEach((child) => {
+      child.traverse(callback);
+    });
+  }
+  /**
+   * Render tree into DOM container.
+   * @returns {HTMLElement} The HTML element.
+   */
+  render() {
+    const containerEl = createContainerElement();
+    this.traverse(function(node) {
+      node.el = createNodeElement(node);
+      containerEl.appendChild(node.el);
+    });
+    return containerEl;
+  }
+  expand() {
+    this.traverse(function(child) {
+      child.el.classList.remove(classes.HIDDEN);
+      child.isExpanded = true;
+      setCaretIconDown(child);
+    });
+  }
+  collapse() {
+    this.traverse((child) => {
+      child.isExpanded = false;
+      if (child.depth > this.depth) {
+        child.el.classList.add(classes.HIDDEN);
+      }
+      setCaretIconRight(child);
+    });
+  }
+  destroy() {
+    this.traverse((node) => {
+      if (node.dispose) {
+        node.dispose(); 
+      }
+    })
+    this.el.parentNode.remove();
+  }
+}
 /**
  * @param {object} [params] - The input data.
  * @param {string} [params.key] - The key.
@@ -166,19 +224,6 @@ function createNodeElement(node) {
   return lineEl;
 }
 /**
- * Recursively traverse Tree object.
- * @param {VirtualNode} node - The virtual node.
- * @param {Function} callback - The callback.
- */
-function traverse(node, callback) {
-  callback(node);
-  if (node.children.length > 0) {
-    node.children.forEach((child) => {
-      traverse(child, callback);
-    });
-  }
-}
-/**
  * Create a virtual node object.
  * @param {object} opt - The options.
  * @returns {VirtualNode} - The virtual node.
@@ -194,7 +239,8 @@ function createNode(opt = {}) {
   if (isEmptyObject(value)) {
     value = "{}";
   }
-  return {
+  const node = new VirtualNode();
+  Object.assign(node, {
     key: opt.key || null,
     parent: opt.parent || null,
     value: value,
@@ -204,7 +250,8 @@ function createNode(opt = {}) {
     el: opt.el || null,
     depth: opt.depth || 0,
     dispose: null
-  }
+  });
+  return node;
 }
 /**
  * Create subnode for node
@@ -243,58 +290,7 @@ function createVirtualTree(value) {
   createSubnode(value, rootNode);
   return rootNode;
 }
-/**
- * Render tree into DOM container
- * @param {object} tree
- * @returns {HTMLElement} The HTML element.
- */
-function render(tree) {
-  const containerEl = createContainerElement();
-  traverse(tree, function(node) {
-    node.el = createNodeElement(node);
-    containerEl.appendChild(node.el);
-  });
-  return containerEl;
-}
-/**
- * @param {VirtualNode} node 
- */
-function expand(node) {
-  traverse(node, function(child) {
-    child.el.classList.remove(classes.HIDDEN);
-    child.isExpanded = true;
-    setCaretIconDown(child);
-  });
-}
-/**
- * @param {VirtualNode} node 
- */
-function collapse(node) {
-  traverse(node, function(child) {
-    child.isExpanded = false;
-    if (child.depth > node.depth) {
-      child.el.classList.add(classes.HIDDEN);
-    }
-    setCaretIconRight(child);
-  });
-}
-/**
- * @param {VirtualNode} tree 
- */
-function destroy(tree) {
-  traverse(tree, (node) => {
-    if (node.dispose) {
-      node.dispose(); 
-    }
-  })
-  tree.el.parentNode.remove();
-}
 export {
   toggleNode,
-  render,
   createVirtualTree,
-  expand,
-  collapse,
-  traverse,
-  destroy
 };

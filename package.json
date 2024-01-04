@@ -1,5 +1,5 @@
 {
-  "name": "@pgrabovets/json-view",
+  "name": "@kungfooman/objectview",
   "version": "2.7.5",
   "description": "View objects in DOM",
   "scripts": {
@@ -7,7 +7,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pgrabovets/json-view.git"
+    "url": "git+https://github.com/kungfooman/ObjectView.js.git"
   },
   "keywords": [
     "json"
