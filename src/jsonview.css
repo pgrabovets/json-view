@@ -28,6 +28,12 @@
   margin-right: 4px;
   margin-left: 4px;
 }
+.json-container .json-type {
+  color: #a91479;
+  font-weight: bold;
+  margin-right: 4px;
+  margin-left: 4px;
+}
 .json-container .json-index {
   margin-right: 4px;
   margin-left: 4px;

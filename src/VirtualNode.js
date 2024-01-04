@@ -105,27 +105,23 @@ class VirtualNode {
   }
   /**
    * Create node html element.
-   * @returns {HTMLElement} - New HTMLElement.
+   * @returns {HTMLDivElement} - New HTMLDivElement.
    */
   createNodeElement() {
-    const node = this; // todo rewrite
-    const el = document.createElement('div');
-    if (node.children.length > 0) {
-      el.innerHTML = node.expandTypeAndSize();
-      const caretEl = el.querySelector('.' + classes.CARET_ICON);
-      node.dispose = listen(caretEl, 'click', () => node.toggleNode());
+    const line = document.createElement('div');
+    line.classList.add('line');
+    if (this.children.length) {
+      line.innerHTML = this.expandTypeAndSize();
+      const caretEl = line.querySelector('.' + classes.CARET_ICON);
+      this.dispose = listen(caretEl, 'click', () => this.toggleNode());
     } else {
-      el.innerHTML = node.notExpandedTemplate();
+      line.innerHTML = this.notExpandedTemplate();
     }
-    const lineEl = el.children[0];
-    if (!(lineEl instanceof HTMLElement)) {
-      throw new Error('lineEl not an instance of HTMLElement');
+    if (this.parent) {
+      line.classList.add(classes.HIDDEN);
     }
-    if (node.parent !== null) {
-      lineEl.classList.add(classes.HIDDEN);
-    }
-    lineEl.style.marginLeft = node.depth * 18 + 'px';
-    return lineEl;
+    line.style.marginLeft = this.depth * 18 + 'px';
+    return line;
   }
   toggleNode() {
     if (this.isExpanded) {
@@ -181,18 +177,14 @@ class VirtualNode {
     }
     if (!parent) {
       return `
-        <div class="line">
-          <div class="json-${type}">${value}</div>
-        </div>
+        <div class="json-${type}">${value}</div>
       `;
     }
     return `
-      <div class="line">
-        <div class="empty-icon"></div>
-        <div class="json-key">${key}</div>
-        <div class="json-separator">:</div>
-        <div class="json-value json-${type}">${value}</div>
-      </div>
+      <div class="empty-icon"></div>
+      <div class="json-key">${key}</div>
+      <div class="json-separator">:</div>
+      <div class="json-value json-${type}">${value}</div>
     `;
   }
   /**
@@ -202,19 +194,15 @@ class VirtualNode {
     const {key, type, size} = this;
     if (key === null) {
       return `
-        <div class="line">
-          <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
-          <div class="json-type">${type}</div>
-          <div class="json-size">${size}</div>
-        </div>
+        <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
+        <div class="json-type">${type}</div>
+        <div class="json-size">${size}</div>
       `;
     }
     return `
-      <div class="line">
-        <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
-        <div class="json-key">${key}</div>
-        <div class="json-size">${size}</div>
-      </div>
+      <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
+      <div class="json-key">${key}</div>
+      <div class="json-size">${size}</div>
     `;
   }
   /**
