@@ -7,6 +7,7 @@ async function main() {
   const elem = jsonview.render(tree);
   document.querySelector('.root').append(elem);
   jsonview.expand(tree);
+  Object.assign(window, {tree, elem});
 }
 main();
 const parent = document.querySelector('.root-window');
@@ -35,3 +36,4 @@ exampleParentData(document.querySelector('#td-a'), 123);
 exampleParentData(document.querySelector('#td-b'), true);
 exampleParentData(document.querySelector('#td-c'), "test str");
 exampleParentData(document.querySelector('#td-d'), {a: {b: {c: {d: 1234}}}});
+exampleParentData(document.querySelector('#td-e'), Object.create(null));

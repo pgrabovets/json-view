@@ -126,11 +126,10 @@ function toggleNode(node) {
  * @returns {HTMLElement} - New HTMLElement.
  */
 function createNodeElement(node) {
-  let el = document.createElement('div');
+  const el = document.createElement('div');
   /**
-   * 
    * @param {VirtualNode} node 
-   * @returns 
+   * @returns {string | null}
    */
   const getSizeString = (node) => {
     const len = node.children.length;
