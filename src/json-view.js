@@ -8,22 +8,6 @@ const classes = {
     ICON: 'fas'
 }
 /**
- * @param {object} [params] - The input data.
- * @param {string} [params.key] - The key.
- * @param {number} [params.size] - The size.
- * @returns {string} HTML string.
- */
-function expandedTemplate(params = {}) {
-  const {key, size} = params;
-  return `
-    <div class="line">
-      <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
-      <div class="json-key">${key}</div>
-      <div class="json-size">${size}</div>
-    </div>
-  `;
-}
-/**
  * Create a virtual node object.
  * @param {object} opt - The options.
  * @returns {VirtualNode} - The virtual node.
@@ -92,6 +76,5 @@ function createVirtualTree(value) {
 }
 export {
   createVirtualTree,
-  expandedTemplate,
   classes
 };

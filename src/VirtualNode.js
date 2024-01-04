@@ -1,5 +1,5 @@
 import {createContainerElement} from "./createContainerElement.js";
-import {expandedTemplate, classes} from "./json-view.js";
+import {classes} from "./json-view.js";
 import {listen} from './listen.js';
 class VirtualNode {
   /** @type {VirtualNode[]} */
@@ -72,7 +72,7 @@ class VirtualNode {
   /**
    * @type {string | null}
    */
-  get sizeString() {
+  get size() {
     const len = this.children.length;
     if (this.type === 'array') {
       return `[${len}]`;
@@ -90,10 +90,7 @@ class VirtualNode {
     const node = this; // todo rewrite
     const el = document.createElement('div');
     if (node.children.length > 0) {
-      el.innerHTML = expandedTemplate({
-        key: node.key,
-        size: node.sizeString,
-      })
+      el.innerHTML = node.expandedTemplate();
       const caretEl = el.querySelector('.' + classes.CARET_ICON);
       node.dispose = listen(caretEl, 'click', () => node.toggleNode());
     } else {
@@ -174,6 +171,19 @@ class VirtualNode {
         <div class="json-key">${key}</div>
         <div class="json-separator">:</div>
         <div class="json-value json-${type}">${value}</div>
+      </div>
+    `;
+  }
+  /**
+   * @returns {string} HTML string.
+   */
+  expandedTemplate() {
+    const {key, size} = this;
+    return `
+      <div class="line">
+        <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
+        <div class="json-key">${key}</div>
+        <div class="json-size">${size}</div>
       </div>
     `;
   }
