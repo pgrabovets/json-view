@@ -1,29 +1,66 @@
 import {createContainerElement} from "./createContainerElement.js";
-import {classes, createNode} from "./json-view.js";
-import {listen} from './listen.js';
-import {getDataType} from './getDataType.js';
+import {classes               } from "./json-view.js";
+import {listen                } from './listen.js';
+import {getDataType           } from './getDataType.js';
+/*
+  Object.assign(node, {
+    value: value,
+    type: opt.type || null,
+    el: opt.el || null,
+    dispose: null
+  });
+*/
 class VirtualNode {
   /** @type {VirtualNode[]} */
   children = [];
   /** @type {boolean} */
-  isExpanded;
-  /** @type {string} */
-  key;
+  isExpanded = false;
+  /** @type {string | null} */
+  key = null;
   /**
    * The unlisten function.
    * @type {Function | null}
    */
   dispose;
   /** @type {number} */
-  depth;
+  depth = 0;
   /** @type {VirtualNode | null} */
-  parent;
+  parent = null;
   /** @type {any} */
   value;
   /** @type {'array'|'object'} */
   type;
   /** @type {HTMLElement} */
   el;
+  /**
+   * Create a virtual node object.
+   * @param {object} [opt] - The options.
+   * @param {any} [opt.value] - The value.
+   * @param {string} [opt.key] - The key.
+   */
+  constructor(opt = {}) {
+    const isEmptyObject = (value) => {
+      return (
+        getDataType(value) === 'object' &&
+        Object.keys(value).length === 0
+      )
+    }
+    let value = opt.hasOwnProperty('value') ? opt.value : null;
+    if (isEmptyObject(value)) {
+      value = "{}";
+    }
+    Object.assign(this, {
+      key: opt.key || null,
+      parent: opt.parent || null,
+      value: value,
+      //isExpanded: opt.isExpanded || false,
+      type: opt.type || null,
+      //children: opt.children || [],
+      //el: opt.el || null,
+      depth: opt.depth || 0,
+      //dispose: null
+    });
+  }
   /**
    * Recursively traverse virtual node.
    * @param {(node: VirtualNode) => void} callback - The callback.
@@ -203,7 +240,7 @@ class VirtualNode {
     }
     for (const key in data) {
       const value = data[key];
-      const child = createNode({
+      const child = new VirtualNode({
         value,
         key,
         depth: node.depth + 1,
