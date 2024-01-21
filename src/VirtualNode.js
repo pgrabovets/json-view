@@ -1,6 +1,5 @@
-import {classes               } from "./json-view.js";
-import {listen                } from './listen.js';
-import {getDataType           } from './getDataType.js';
+import {listen     } from './listen.js';
+import {getDataType} from './getDataType.js';
 /*
   Object.assign(node, {
     value: value,
@@ -10,6 +9,13 @@ import {getDataType           } from './getDataType.js';
   });
 */
 class VirtualNode {
+  classes = {
+    HIDDEN: 'hidden',
+    CARET_ICON: 'caret-icon',
+    CARET_RIGHT: 'fa-caret-right',
+    CARET_DOWN: 'fa-caret-down',
+    ICON: 'fas'
+  };
   nokey = Symbol("no key");
   /** @type {VirtualNode[]} */
   children = [];
@@ -72,7 +78,7 @@ class VirtualNode {
   }
   expand() {
     this.traverse(function(child) {
-      child.el?.classList.remove(classes.HIDDEN);
+      child.el?.classList.remove(this.classes.HIDDEN);
       child.isExpanded = true;
       child.setCaretIconDown();
     });
@@ -81,7 +87,7 @@ class VirtualNode {
     this.traverse((child) => {
       child.isExpanded = false;
       if (child.depth > this.depth) {
-        child.el?.classList.add(classes.HIDDEN);
+        child.el?.classList.add(this.classes.HIDDEN);
       }
       child.setCaretIconRight();
     });
@@ -116,13 +122,13 @@ class VirtualNode {
     line.classList.add('line');
     if (this.children.length) {
       line.innerHTML = this.expandTypeAndSize();
-      const caretEl = line.querySelector('.' + classes.CARET_ICON);
+      const caretEl = line.querySelector('.' + this.classes.CARET_ICON);
       this.dispose = listen(caretEl, 'click', () => this.toggleNode());
     } else {
       line.innerHTML = this.notExpandedTemplate();
     }
     if (this.parent) {
-      line.classList.add(classes.HIDDEN);
+      line.classList.add(this.classes.HIDDEN);
     }
     line.style.marginLeft = this.depth * 18 + 'px';
     return line;
@@ -140,23 +146,23 @@ class VirtualNode {
   }
   setCaretIconDown() {
     if (this.children.length > 0) {
-      const icon = this.el.querySelector('.' + classes.ICON);
+      const icon = this.el.querySelector('.' + this.classes.ICON);
       if (icon) {
-        icon.classList.replace(classes.CARET_RIGHT, classes.CARET_DOWN);
+        icon.classList.replace(this.classes.CARET_RIGHT, this.classes.CARET_DOWN);
       }
     }
   }
   setCaretIconRight() {
     if (this.children.length > 0) {
-      const icon = this.el.querySelector('.' + classes.ICON);
+      const icon = this.el.querySelector('.' + this.classes.ICON);
       if (icon) {
-        icon.classList.replace(classes.CARET_DOWN, classes.CARET_RIGHT);
+        icon.classList.replace(this.classes.CARET_DOWN, this.classes.CARET_RIGHT);
       }
     }
   }
   hideNodeChildren() {
     this.children.forEach((child) => {
-      child.el.classList.add(classes.HIDDEN);
+      child.el.classList.add(this.classes.HIDDEN);
       if (child.isExpanded) {
         child.hideNodeChildren();
       }
@@ -164,7 +170,7 @@ class VirtualNode {
   }
   showNodeChildren() {
     this.children.forEach((child) => {
-      child.el.classList.remove(classes.HIDDEN);
+      child.el.classList.remove(this.classes.HIDDEN);
       if (child.isExpanded) {
         child.showNodeChildren();
       }
