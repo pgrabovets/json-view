@@ -1,7 +1,8 @@
 {
-    "compilerOptions": {
-        "checkJs": true,
-        "target": "ES2015",
-        "strict": true
-    }
+  "compilerOptions": {
+    "moduleResolution": "nodenext",
+    "checkJs": true,
+    "target": "ES2015",
+    "strict": true
+  }
 }

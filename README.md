@@ -1,9 +1,12 @@
-# json-view
-This is a javascript library for displaying json data into a DOM. [link to demo](http://pgrabovets.github.io/json-view/)
+# DisplayAnything.js
+
+Work in 
+
+This is a javascript library for displaying anything in a DOM. [link to demo](http://pgrabovets.github.io/json-view/)
 
 ### Installation
 ```javascript
-  npm install '@pgrabovets/json-view';
+  npm install display-anything;
 ```
 
 ### How to use
@@ -51,60 +54,17 @@ jsonview.toggleNode(tree);
 jsonview.destroy(tree);
 ```
 
-### Example1
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>JSON VIEW</title>
-</head>
-<body>
-  <div class="root"></div>
+# Example
 
-  <script type="text/javascript" src="jsonview.js"></script>
-  <script type="text/javascript">
-    fetch('example2.json')
-    .then((res)=> {
-      return res.text();
-    })
-    .then((data) => {
-      const tree = jsonview.create(data);
-      jsonview.render(tree, document.querySelector('.root'));
-      jsonview.expand(tree);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  </script>
-</body>
-</html>
+https://github.com/kungfooman/DisplayAnything.js/blob/main/demo/demo.js
 
+# Development
+
+```sh
+# Package doesn't require a build step, ESM ftw!
+cd /var/www/html
+git clone https://github.com/kungfooman/DisplayAnything.js
+open http://127.0.0.1/DisplayAnything.js
 ```
 
-### Example2
-```javascript
-import jsonview from '@pgrabovets/json-view';
-
-fetch('example2.json')
-.then((res)=> {
-  return res.text();
-})
-.then((data) => {
-  const tree = jsonview.create(data);
-  jsonview.render(tree, document.querySelector('.root'));
-  jsonview.expand(tree);
-})
-.catch((err) => {
-  console.log(err);
-})
-```
-
-### For development install dependencies and run scripts
-```
-$ npm install
-
-$ npm run serve
-$ npm run build
-
-open http://localhost:3000/
-```
+As link: http://127.0.0.1/DisplayAnything.js

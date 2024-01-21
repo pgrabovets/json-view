@@ -8,7 +8,7 @@ import {getDataType} from './getDataType.js';
     dispose: null
   });
 */
-class VirtualNode {
+class DisplayAnything {
   classes = {
     HIDDEN: 'hidden',
     CARET_ICON: 'caret-icon',
@@ -17,7 +17,7 @@ class VirtualNode {
     ICON: 'fas'
   };
   nokey = Symbol("no key");
-  /** @type {VirtualNode[]} */
+  /** @type {DisplayAnything[]} */
   children = [];
   /** @type {boolean} */
   isExpanded = false;
@@ -30,7 +30,7 @@ class VirtualNode {
   dispose = null;
   /** @type {number} */
   depth = 0;
-  /** @type {VirtualNode | undefined} */
+  /** @type {DisplayAnything | undefined} */
   parent;
   /** @type {any} */
   value;
@@ -41,7 +41,7 @@ class VirtualNode {
    * @param {any} value - The value.
    * @param {string|symbol} [key] - The key.
    * @param {number} [depth] - The depth.
-   * @param {VirtualNode} [parent] - The parent.
+   * @param {DisplayAnything} [parent] - The parent.
    */
   constructor(value, key = this.nokey, depth = 0, parent) {
     this.value = value;
@@ -55,7 +55,7 @@ class VirtualNode {
   }
   /**
    * Recursively traverse virtual node.
-   * @param {(node: VirtualNode) => void} callback - The callback.
+   * @param {(node: DisplayAnything) => void} callback - The callback.
    */
   traverse(callback) {
     callback(this);
@@ -70,14 +70,14 @@ class VirtualNode {
   render() {
     const containerEl = document.createElement('div');
     containerEl.className = 'json-container';
-    this.traverse(function(node) {
+    this.traverse((node) => {
       node.el = node.createNodeElement();
       containerEl.appendChild(node.el);
     });
     return containerEl;
   }
   expand() {
-    this.traverse(function(child) {
+    this.traverse((child) => {
       child.el?.classList.remove(this.classes.HIDDEN);
       child.isExpanded = true;
       child.setCaretIconDown();
@@ -94,10 +94,8 @@ class VirtualNode {
   }
   destroy() {
     this.traverse((node) => {
-      if (node.dispose) {
-        node.dispose(); 
-      }
-    })
+      node.dispose?.();
+    });
     this.el?.parentElement?.remove();
   }
   /**
@@ -231,9 +229,9 @@ class VirtualNode {
       const depthInner = this.depth + 1;
       const parent = this;
       // console.log('createSubnode', {depthInner});
-      const child = new VirtualNode(value, key, depthInner, parent);
+      const child = new DisplayAnything(value, key, depthInner, parent);
       this.children.push(child);
     }
   }
 }
-export {VirtualNode};
+export {DisplayAnything};

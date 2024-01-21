@@ -13,5 +13,8 @@
     "json", "dom", "display", "object", "visualisation"
   ],
   "author": "Pavel Grabovets / Hermann Rolfes",
-  "license": "MIT"
+  "license": "MIT",
+  "files": [
+    "src"
+  ]
 }

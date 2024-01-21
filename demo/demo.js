@@ -1,20 +1,20 @@
 import * as jsonview from '../src/index.js';
-import {VirtualNode} from '../src/VirtualNode.js';
+import {DisplayAnything} from '../src/DisplayAnything.js';
 Object.assign(window, jsonview);
 async function main() {
   const resp = await fetch('example.json');
   const json = await resp.json();
-  const tree = new VirtualNode(json);
+  const tree = new DisplayAnything(json);
   const elem = tree.render();
   document.querySelector('.root').append(elem);
   tree.expand();
-  const test = new VirtualNode("test");
+  const test = new DisplayAnything("test");
   test.destroy();
   Object.assign(window, {json, tree, elem, test});
 }
 main();
 const parent = document.querySelector('.root-window');
-const treeObj = new VirtualNode({
+const treeObj = new DisplayAnything({
   numbers: [1, 2, 3],
   innerObject: {a: 1, b: 2}
 });
@@ -23,7 +23,7 @@ const treeObj = new VirtualNode({
  * @param {*} data 
  */
 function example(desc, data) {
-  const tree = new VirtualNode(data);
+  const tree = new DisplayAnything(data);
   const e = tree.render();
   const hr = document.createElement('hr');
   document.body.append(desc, e, hr);
@@ -39,7 +39,7 @@ example('Float32Array display', new Float32Array([1, 2, 3]));
  * @param {*} data 
  */
 function exampleParentData(parent, data) {
-  const tree = new VirtualNode(data);
+  const tree = new DisplayAnything(data);
   const e = tree.render();
   if (!parent) {
     throw new Error("exampleParentData> missing parent");
