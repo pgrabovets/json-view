@@ -1,4 +1,3 @@
-import {createContainerElement} from "./createContainerElement.js";
 import {classes               } from "./json-view.js";
 import {listen                } from './listen.js';
 import {getDataType           } from './getDataType.js';
@@ -11,12 +10,13 @@ import {getDataType           } from './getDataType.js';
   });
 */
 class VirtualNode {
+  nokey = Symbol("no key");
   /** @type {VirtualNode[]} */
   children = [];
   /** @type {boolean} */
   isExpanded = false;
-  /** @type {string | null} */
-  key = null;
+  /** @type {string | symbol} */
+  key;
   /**
    * The unlisten function.
    * @type {Function | null}
@@ -24,22 +24,25 @@ class VirtualNode {
   dispose = null;
   /** @type {number} */
   depth = 0;
-  /** @type {VirtualNode | null} */
-  parent = null;
+  /** @type {VirtualNode | undefined} */
+  parent;
   /** @type {any} */
   value;
   /** @type {HTMLElement | null} */
   el = null;
   /**
    * Create a virtual node object.
-   * @param {object} [opt] - The options.
-   * @param {any} [opt.value] - The value.
-   * @param {string} [opt.key] - The key.
-   * @param {number} [opt.depth] - The depth.
-   * @param {VirtualNode} [opt.parent] - The parent.
+   * @param {any} value - The value.
+   * @param {string|symbol} [key] - The key.
+   * @param {number} [depth] - The depth.
+   * @param {VirtualNode} [parent] - The parent.
    */
-  constructor(opt = {}) {
-    Object.assign(this, opt);
+  constructor(value, key = this.nokey, depth = 0, parent) {
+    this.value = value;
+    this.key = key;
+    this.depth = depth;
+    this.parent = parent;
+    this.createSubnode(value);
   }
   get type() {
     return getDataType(this.value);
@@ -59,7 +62,8 @@ class VirtualNode {
    * @returns {HTMLElement} The HTML element.
    */
   render() {
-    const containerEl = createContainerElement();
+    const containerEl = document.createElement('div');
+    containerEl.className = 'json-container';
     this.traverse(function(node) {
       node.el = node.createNodeElement();
       containerEl.appendChild(node.el);
@@ -192,7 +196,7 @@ class VirtualNode {
    */
   expandTypeAndSize() {
     const {key, type, size} = this;
-    if (key === null) {
+    if (key === this.nokey) {
       return `
         <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
         <div class="json-type">${type}</div>
@@ -208,25 +212,21 @@ class VirtualNode {
   /**
    * Create subnode for node.
    * @param {any} data
-   * @param {number} [depth]
    */
-  createSubnode(data, depth = 0) {
+  createSubnode(data) {
     if (typeof data !== 'object') {
       return;
     }
-    if (depth > 1) {
+    if (this.depth > 1) {
       return;
     }
     for (const key in data) {
       const value = data[key];
-      const child = new VirtualNode({
-        value,
-        key,
-        depth: this.depth + 1,
-        parent: this,
-      });
+      const depthInner = this.depth + 1;
+      const parent = this;
+      // console.log('createSubnode', {depthInner});
+      const child = new VirtualNode(value, key, depthInner, parent);
       this.children.push(child);
-      child.createSubnode(value, depth + 1);
     }
   }
 }
