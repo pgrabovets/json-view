@@ -1,73 +1,73 @@
-.json-container {
+.display-anything {
   font-family: 'Open Sans';
   font-size: 16px;
   background-color: #fff;
   color: #808080;
   box-sizing: border-box;
 }
-.json-container .line {
+.display-anything .line {
   margin: 4px 0;
   display: flex;
   justify-content: flex-start;
 }
-.json-container .caret-icon {
+.display-anything .caret-icon {
   width: 18px;
   text-align: center;
   cursor: pointer;
 }
-.json-container .empty-icon {
+.display-anything .empty-icon {
   width: 18px;
 }
-.json-container .json-type {
+.display-anything .json-type {
   margin-right: 4px;
   margin-left: 4px;
 }
-.json-container .json-key {
+.display-anything .json-key {
   color: #a91479;
   font-weight: bold;
   margin-right: 4px;
   margin-left: 4px;
 }
-.json-container .json-type {
+.display-anything .json-type {
   color: #a91479;
   font-weight: bold;
   margin-right: 4px;
   margin-left: 4px;
 }
-.json-container .json-index {
+.display-anything .json-index {
   margin-right: 4px;
   margin-left: 4px;
 }
-.json-container .json-value {
+.display-anything .json-value {
   margin-left: 8px;
 }
-.json-container .json-number {
+.display-anything .json-number {
   color: #132bff;
 }
-.json-container .json-boolean {
+.display-anything .json-boolean {
   color: #5fb4ec;
 }
-.json-container .json-string {
+.display-anything .json-string {
   color: #fd5246;
 }
-.json-container .json-size {
+.display-anything .json-size {
   margin-right: 4px;
   margin-left: 4px;
 }
-.json-container .hidden {
+.display-anything .hidden {
   display: none;
 }
-.json-container .fas {
+.display-anything .fas {
   display: inline-block;
   border-style: solid;
   width: 0;
   height: 0;
 }
-.json-container .fa-caret-down {
+.display-anything .fa-caret-down {
   border-width: 6px 5px 0 5px;
   border-color: #808080 transparent;
 }
-.json-container .fa-caret-right {
+.display-anything .fa-caret-right {
   border-width: 5px 0 5px 6px;
   border-color: transparent transparent transparent #808080;
 }

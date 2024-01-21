@@ -69,7 +69,7 @@ class DisplayAnything {
    */
   render() {
     const containerEl = document.createElement('div');
-    containerEl.className = 'json-container';
+    containerEl.className = 'display-anything';
     this.traverse((node) => {
       node.el = node.createNodeElement();
       containerEl.appendChild(node.el);
