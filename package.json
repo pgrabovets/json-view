@@ -1,16 +1,16 @@
 {
-  "name": "@kungfooman/objectview",
-  "version": "2.7.5",
-  "description": "View objects in DOM",
+  "name": "display-anything",
+  "version": "1.0.0",
+  "description": "Display anything in DOM",
   "scripts": {
     "build": "echo build-free :tada:"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kungfooman/ObjectView.js.git"
+    "url": "git+https://github.com/kungfooman/DisplayAnything.js.git"
   },
   "keywords": [
-    "json"
+    "json", "dom", "display", "object", "visualisation"
   ],
   "author": "Pavel Grabovets / Hermann Rolfes",
   "license": "MIT"
