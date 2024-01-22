@@ -1,9 +1,5 @@
 class DisplayAnything {
-  classes = {
-    CARET_RIGHT: 'fa-caret-right',
-    CARET_DOWN: 'fa-caret-down',
-  };
-  nokey = Symbol("no key");
+  static nokey = Symbol("no key");
   /** @type {DisplayAnything[]} */
   children = [];
   /** @type {boolean} */
@@ -30,7 +26,7 @@ class DisplayAnything {
    * @param {number} [depth] - The depth.
    * @param {DisplayAnything} [parent] - The parent.
    */
-  constructor(value, key = this.nokey, depth = 0, parent) {
+  constructor(value, key = DisplayAnything.nokey, depth = 0, parent) {
     this.value = value;
     this.key = key;
     this.depth = depth;
@@ -171,20 +167,12 @@ class DisplayAnything {
     }
   }
   setCaretIconDown() {
-    if (this.children.length > 0) {
-      const icon = this.el.querySelector('.display-anything-fas');
-      if (icon) {
-        icon.classList.replace(this.classes.CARET_RIGHT, this.classes.CARET_DOWN);
-      }
-    }
+    const icon = this.el?.querySelector('.display-anything-fas');
+    icon?.classList.replace('display-anything-caret-right', 'display-anything-caret-down');
   }
   setCaretIconRight() {
-    if (this.children.length > 0) {
-      const icon = this.el.querySelector('.display-anything-fas');
-      if (icon) {
-        icon.classList.replace(this.classes.CARET_DOWN, this.classes.CARET_RIGHT);
-      }
-    }
+    const icon = this.el?.querySelector('.display-anything-fas');  
+    icon?.classList.replace('display-anything-caret-down', 'display-anything-caret-right');
   }
   hideNodeChildren() {
     this.children.forEach((child) => {
@@ -236,17 +224,17 @@ class DisplayAnything {
    */
   expandTypeAndSize() {
     const {key, type, size} = this;
-    if (key === this.nokey) {
+    if (key === DisplayAnything.nokey) {
       // header of displayed value
       return `
-        <div class="display-anything-caret-icon"><i class="display-anything-fas fa-caret-right"></i></div>
+        <div class="display-anything-caret-icon"><i class="display-anything-fas display-anything-caret-right"></i></div>
         <div class="display-anything-type">${type}</div>
         <div class="display-anything-size">${size}</div>
       `;
     }
     // key of an object
     return `
-      <div class="display-anything-caret-icon"><i class="display-anything-fas fa-caret-right"></i></div>
+      <div class="display-anything-caret-icon"><i class="display-anything-fas display-anything-caret-right"></i></div>
       <div class="display-anything-key">${key}</div>
       <div class="display-anything-size">${size}</div>
     `;
