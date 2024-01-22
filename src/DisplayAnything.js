@@ -10,7 +10,6 @@ import {getDataType} from './getDataType.js';
 */
 class DisplayAnything {
   classes = {
-    HIDDEN: 'hidden',
     CARET_ICON: 'caret-icon',
     CARET_RIGHT: 'fa-caret-right',
     CARET_DOWN: 'fa-caret-down',
@@ -72,13 +71,26 @@ class DisplayAnything {
     containerEl.className = 'display-anything';
     this.traverse((node) => {
       node.el = node.createNodeElement();
+      if (node.parent) {
+        node.hide();
+      }
       containerEl.appendChild(node.el);
     });
     return containerEl;
   }
+  show() {
+    if (this.el) {
+      this.el.style.display = '';
+    }
+  }
+  hide() {
+    if (this.el) {
+      this.el.style.display = 'none';
+    }
+  }
   expand() {
     this.traverse((child) => {
-      child.el?.classList.remove(this.classes.HIDDEN);
+      child.show();
       child.isExpanded = true;
       child.setCaretIconDown();
     });
@@ -87,7 +99,7 @@ class DisplayAnything {
     this.traverse((child) => {
       child.isExpanded = false;
       if (child.depth > this.depth) {
-        child.el?.classList.add(this.classes.HIDDEN);
+        child.hide();
       }
       child.setCaretIconRight();
     });
@@ -125,9 +137,6 @@ class DisplayAnything {
     } else {
       line.innerHTML = this.notExpandedTemplate();
     }
-    if (this.parent) {
-      line.classList.add(this.classes.HIDDEN);
-    }
     line.style.marginLeft = this.depth * 18 + 'px';
     return line;
   }
@@ -160,7 +169,7 @@ class DisplayAnything {
   }
   hideNodeChildren() {
     this.children.forEach((child) => {
-      child.el.classList.add(this.classes.HIDDEN);
+      child.hide();
       if (child.isExpanded) {
         child.hideNodeChildren();
       }
@@ -168,7 +177,7 @@ class DisplayAnything {
   }
   showNodeChildren() {
     this.children.forEach((child) => {
-      child.el.classList.remove(this.classes.HIDDEN);
+      child.show();
       if (child.isExpanded) {
         child.showNodeChildren();
       }
