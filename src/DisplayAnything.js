@@ -1,5 +1,4 @@
-import {listen     } from './listen.js';
-import {getDataType} from './getDataType.js';
+import {listen} from './listen.js';
 /*
   Object.assign(node, {
     value: value,
@@ -47,8 +46,35 @@ class DisplayAnything {
     this.parent = parent;
     this.createSubnode(value);
   }
+  /**
+   * The type of value as string.
+   * @type {string}
+   */
   get type() {
-    return getDataType(this.value);
+    const {value} = this;
+    if (Array.isArray(value)) {
+      return 'array';
+    }
+    const t = typeof value;
+    if (t === 'string' || t === 'number' || t === 'boolean') {
+      return t;
+    }
+    if (value === null) {
+      return 'null';
+    }
+    if (value === undefined) {
+      return 'undefined';
+    }
+    const proto = Object.getPrototypeOf(value);
+    if (!proto) {
+      console.log("no proto, happens for Object.create(null)");
+      return t;
+    }
+    if (!proto.constructor) {
+      console.log("proto but no constructor");
+      return t;
+    }
+    return proto.constructor.name;
   }
   /**
    * Recursively traverse virtual node.
@@ -181,6 +207,14 @@ class DisplayAnything {
       }
     });
   }
+  valueToString() {
+    try {
+      return this.value + "";
+    } catch (e) {
+      console.error(e);
+      return 'valueToString failed';
+    }
+  }
   /**
    * @returns {string} HTML string.
    */
@@ -192,7 +226,7 @@ class DisplayAnything {
     }
     if (!parent) {
       return `
-        <div class="display-anything-${type}">${value}</div>
+        <div class="display-anything-${type}">${this.valueToString()}</div>
       `;
     }
     return `
