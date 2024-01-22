@@ -10,10 +10,8 @@ import {getDataType} from './getDataType.js';
 */
 class DisplayAnything {
   classes = {
-    CARET_ICON: 'caret-icon',
     CARET_RIGHT: 'fa-caret-right',
     CARET_DOWN: 'fa-caret-down',
-    ICON: 'fas'
   };
   nokey = Symbol("no key");
   /** @type {DisplayAnything[]} */
@@ -129,10 +127,10 @@ class DisplayAnything {
    */
   createNodeElement() {
     const line = document.createElement('div');
-    line.classList.add('line');
+    line.classList.add('display-anything-line');
     if (this.children.length) {
       line.innerHTML = this.expandTypeAndSize();
-      const caretEl = line.querySelector('.' + this.classes.CARET_ICON);
+      const caretEl = line.querySelector('.display-anything-caret-icon');
       this.dispose = listen(caretEl, 'click', () => this.toggleNode());
     } else {
       line.innerHTML = this.notExpandedTemplate();
@@ -153,7 +151,7 @@ class DisplayAnything {
   }
   setCaretIconDown() {
     if (this.children.length > 0) {
-      const icon = this.el.querySelector('.' + this.classes.ICON);
+      const icon = this.el.querySelector('.display-anything-fas');
       if (icon) {
         icon.classList.replace(this.classes.CARET_RIGHT, this.classes.CARET_DOWN);
       }
@@ -161,7 +159,7 @@ class DisplayAnything {
   }
   setCaretIconRight() {
     if (this.children.length > 0) {
-      const icon = this.el.querySelector('.' + this.classes.ICON);
+      const icon = this.el.querySelector('.display-anything-fas');
       if (icon) {
         icon.classList.replace(this.classes.CARET_DOWN, this.classes.CARET_RIGHT);
       }
@@ -194,14 +192,14 @@ class DisplayAnything {
     }
     if (!parent) {
       return `
-        <div class="json-${type}">${value}</div>
+        <div class="display-anything-${type}">${value}</div>
       `;
     }
     return `
-      <div class="empty-icon"></div>
-      <div class="json-key">${key}</div>
-      <div class="json-separator">:</div>
-      <div class="json-value json-${type}">${value}</div>
+      <div class="display-anything-empty-icon"></div>
+      <div class="display-anything-key">${key}</div>
+      <div class="display-anything-separator">:</div>
+      <div class="display-anything-${type}">${value}</div>
     `;
   }
   /**
@@ -210,16 +208,18 @@ class DisplayAnything {
   expandTypeAndSize() {
     const {key, type, size} = this;
     if (key === this.nokey) {
+      // header of displayed value
       return `
-        <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
-        <div class="json-type">${type}</div>
-        <div class="json-size">${size}</div>
+        <div class="display-anything-caret-icon"><i class="display-anything-fas fa-caret-right"></i></div>
+        <div class="display-anything-type">${type}</div>
+        <div class="display-anything-size">${size}</div>
       `;
     }
+    // key of an object
     return `
-      <div class="caret-icon"><i class="fas fa-caret-right"></i></div>
-      <div class="json-key">${key}</div>
-      <div class="json-size">${size}</div>
+      <div class="display-anything-caret-icon"><i class="display-anything-fas fa-caret-right"></i></div>
+      <div class="display-anything-key">${key}</div>
+      <div class="display-anything-size">${size}</div>
     `;
   }
   /**

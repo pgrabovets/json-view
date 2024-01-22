@@ -5,56 +5,47 @@
   color: #808080;
   box-sizing: border-box;
 }
-.display-anything .line {
+.display-anything-line {
   margin: 4px 0;
   display: flex;
   justify-content: flex-start;
 }
-.display-anything .caret-icon {
+.display-anything-caret-icon {
   width: 18px;
   text-align: center;
   cursor: pointer;
 }
-.display-anything .empty-icon {
+.display-anything-empty-icon {
   width: 18px;
+  transform: translateY(-50%);
+  border-bottom: 1px dotted hotpink;
 }
-.display-anything .json-type {
-  margin-right: 4px;
-  margin-left: 4px;
-}
-.display-anything .json-key {
+.display-anything-key {
   color: #a91479;
   font-weight: bold;
   margin-right: 4px;
   margin-left: 4px;
 }
-.display-anything .json-type {
+.display-anything-type {
   color: #a91479;
   font-weight: bold;
   margin-right: 4px;
   margin-left: 4px;
 }
-.display-anything .json-index {
-  margin-right: 4px;
-  margin-left: 4px;
-}
-.display-anything .json-value {
-  margin-left: 8px;
-}
-.display-anything .json-number {
+.display-anything-number {
   color: #132bff;
 }
-.display-anything .json-boolean {
-  color: #5fb4ec;
+.display-anything-boolean {
+  color: #0d5483;
 }
-.display-anything .json-string {
+.display-anything-string {
   color: #fd5246;
 }
-.display-anything .json-size {
+.display-anything-size {
   margin-right: 4px;
   margin-left: 4px;
 }
-.display-anything .fas {
+.display-anything-fas {
   display: inline-block;
   border-style: solid;
   width: 0;
@@ -67,4 +58,9 @@
 .display-anything .fa-caret-right {
   border-width: 5px 0 5px 6px;
   border-color: transparent transparent transparent #808080;
+}
+.display-anything-separator {
+  color: rgba(0, 0, 0, 0.829);
+  font-weight: bold;
+  padding-right: 2px;
 }
