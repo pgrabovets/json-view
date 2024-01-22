@@ -1,12 +1,3 @@
-import {listen} from './listen.js';
-/*
-  Object.assign(node, {
-    value: value,
-    type: opt.type || null,
-    el: opt.el || null,
-    dispose: null
-  });
-*/
 class DisplayAnything {
   classes = {
     CARET_RIGHT: 'fa-caret-right',
@@ -157,7 +148,11 @@ class DisplayAnything {
     if (this.children.length) {
       line.innerHTML = this.expandTypeAndSize();
       const caretEl = line.querySelector('.display-anything-caret-icon');
-      this.dispose = listen(caretEl, 'click', () => this.toggleNode());
+      if (caretEl) {
+        const handler = () => this.toggleNode();
+        caretEl.addEventListener('click', handler);
+        this.dispose = () => caretEl.removeEventListener('click', handler);
+      }
     } else {
       line.innerHTML = this.notExpandedTemplate();
     }
