@@ -45,11 +45,19 @@ function exampleParentData(parent, data) {
     throw new Error("exampleParentData> missing parent");
   }
   parent.append(e);
+  return tree;
 }
-exampleParentData(document.querySelector('#td-a'), 123);
-exampleParentData(document.querySelector('#td-b'), true);
-exampleParentData(document.querySelector('#td-c'), "test str");
-exampleParentData(document.querySelector('#td-d'), {a: {b: {c: {d: 1234}}}});
-exampleParentData(document.querySelector('#td-e'), {key: "string"});
-exampleParentData(document.querySelector('#td-f'), {string: "test"});
-exampleParentData(document.querySelector('#td-g'), {}); // todo not exandable
+const a = exampleParentData(document.querySelector('#td-a'), 123);
+const b = exampleParentData(document.querySelector('#td-b'), true);
+const c = exampleParentData(document.querySelector('#td-c'), "test str");
+const d = exampleParentData(document.querySelector('#td-d'), {a: {b: {c: {d: 1234}}}});
+const e = exampleParentData(document.querySelector('#td-e'), {key: "string"});
+const f = exampleParentData(document.querySelector('#td-f'), {string: "test"});
+const g = exampleParentData(document.querySelector('#td-g'), {}); // todo not exandable
+window.a = a;
+window.b = b;
+window.c = c;
+window.d = d;
+window.e = e;
+window.f = f;
+window.g = g;
