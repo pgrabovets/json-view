@@ -192,7 +192,11 @@ class DisplayAnything {
   }
   valueToString() {
     try {
-      return this.value + "";
+      let {value} = this;
+      if (typeof value === 'string') {
+        value = JSON.stringify(value);
+      }
+      return value + "";
     } catch (e) {
       console.error(e);
       return 'valueToString failed';
@@ -203,10 +207,6 @@ class DisplayAnything {
    */
   notExpandedTemplate() {
     const {key, type, parent} = this;
-    let {value} = this;
-    if (type === 'string') {
-      value = JSON.stringify(value);
-    }
     if (!parent) {
       return `
         <div class="display-anything-${type}">${this.valueToString()}</div>
@@ -216,7 +216,7 @@ class DisplayAnything {
       <div class="display-anything-empty-icon"></div>
       <div class="display-anything-key">${key}</div>
       <div class="display-anything-separator">:</div>
-      <div class="display-anything-${type}">${value}</div>
+      <div class="display-anything-${type}">${this.valueToString()}</div>
     `;
   }
   /**
