@@ -1,6 +1,6 @@
 {
   "name": "display-anything",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Display anything in DOM",
   "scripts": {
     "build": "echo build-free :tada:"
