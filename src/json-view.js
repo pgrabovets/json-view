@@ -24,12 +24,14 @@ function expandedTemplate(params = {}) {
 
 function notExpandedTemplate(params = {}) {
   const { key, value, type } = params;
+  var clean_value=new DOMParser().parseFromString(value, "text/html").documentElement.textContent;
+  clean_value=clean_value.split('\n').join('<br>');
   return `
     <div class="line">
       <div class="empty-icon"></div>
       <div class="json-key">${key}</div>
       <div class="json-separator">:</div>
-      <div class="json-value json-${type}">${value}</div>
+      <div class="json-value json-${type}">${clean_value}</div>
     </div>
   `
 }

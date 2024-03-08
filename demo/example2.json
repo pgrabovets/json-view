@@ -14,7 +14,7 @@
   "address": {
     "state": "NY",
     "city": "Brooklyn",
-    "street": "718 Marcus Garvey Ave"
+    "street": "<b>718</b> <i>Marcus Garvey Ave</i>\nNY 11206"
   },
   "emptyObject": {}
 }
