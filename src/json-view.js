@@ -113,7 +113,7 @@ function createNodeElement(node) {
   } else {
     el.innerHTML = notExpandedTemplate({
       key: node.key,
-      value: node.value,
+      value: node.value === "" ? '""' : node.value,
       type: node.value === '{}' ? 'object' : typeof node.value
     })
   }

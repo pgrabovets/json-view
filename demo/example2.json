@@ -3,7 +3,7 @@
   "surName": "Sudanagunta",
   "children": [
     {
-      "givenName": "Natalia", 
+      "givenName": "Natalia",
       "age": 5
     },
     {
@@ -16,5 +16,7 @@
     "city": "Brooklyn",
     "street": "718 Marcus Garvey Ave"
   },
-  "emptyObject": {}
+  "emptyObject": {},
+  "prop-with-null": null,
+  "prop-empty-string": ""
 }
