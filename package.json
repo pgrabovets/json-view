@@ -4,6 +4,7 @@
   "description": "",
   "main": "dist/jsonview.js",
   "scripts": {
+    "dev": "webpack serve",
     "serve": "webpack serve",
     "build": "webpack"
   },
